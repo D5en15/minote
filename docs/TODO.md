@@ -444,16 +444,16 @@
 
 ## Phase 15: Admin & Audit
 
-- [ ] 15.1 สร้าง route guard สำหรับ admin
-- [ ] 15.2 สร้างหน้า admin audit logs แบบ internal
-- [ ] 15.3 สร้าง route handler `GET /api/admin/audit-logs`
-- [ ] 15.4 จำกัด route ด้วย admin role
-- [ ] 15.5 เพิ่ม filter audit log ตาม event type
-- [ ] 15.6 เพิ่ม filter audit log ตาม user id
-- [ ] 15.7 เพิ่ม pagination ให้ audit logs
-- [ ] 15.8 สร้าง route handler `GET /api/admin/users/[userId]`
-- [ ] 15.9 ห้าม admin endpoint ส่ง note content
-- [ ] 15.10 ทดสอบ non-admin เข้า admin endpoint ไม่ได้
+- [x] 15.1 สร้าง route guard สำหรับ admin
+- [x] 15.2 สร้างหน้า admin audit logs แบบ internal
+- [x] 15.3 สร้าง route handler `GET /api/admin/audit-logs`
+- [x] 15.4 จำกัด route ด้วย admin role
+- [x] 15.5 เพิ่ม filter audit log ตาม event type
+- [x] 15.6 เพิ่ม filter audit log ตาม user id
+- [x] 15.7 เพิ่ม pagination ให้ audit logs
+- [x] 15.8 สร้าง route handler `GET /api/admin/users/[userId]`
+- [x] 15.9 ห้าม admin endpoint ส่ง note content
+- [x] 15.10 ทดสอบ non-admin เข้า admin endpoint ไม่ได้
 
 ## Phase 16: Security Hardening
 

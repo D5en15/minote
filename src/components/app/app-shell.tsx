@@ -19,9 +19,12 @@ import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+import { ShieldAlert } from "lucide-react";
+
 type AppShellUser = {
   email: string;
   displayName: string | null;
+  role?: string;
 };
 
 type AppShellProps = {
@@ -79,6 +82,10 @@ function getPageTitle(pathname: string) {
 
   if (pathname.startsWith("/app/settings")) {
     return "Settings";
+  }
+
+  if (pathname.startsWith("/app/admin")) {
+    return "Admin Audit Logs";
   }
 
   return "Workspace";
@@ -173,6 +180,22 @@ export function AppShell({ user, children }: AppShellProps) {
             </Link>
           );
         })}
+
+        {user.role === "admin" && (
+          <Link
+            aria-current={pathname.startsWith("/app/admin") ? "page" : undefined}
+            className={cn(
+              "flex h-9 items-center gap-2 rounded-md px-3 text-sm font-medium text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+              pathname.startsWith("/app/admin") &&
+                "bg-sidebar-accent text-sidebar-accent-foreground shadow-sm"
+            )}
+            href="/app/admin"
+            onClick={() => setMobileNavOpen(false)}
+          >
+            <ShieldAlert className="size-4 text-amber-500" aria-hidden="true" />
+            <span>Admin Portal</span>
+          </Link>
+        )}
       </nav>
 
       <div className="border-t border-sidebar-border p-3">

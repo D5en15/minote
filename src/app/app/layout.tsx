@@ -19,6 +19,7 @@ export default async function ProtectedAppLayout({
       user={{
         email: profile.email,
         displayName: profile.display_name,
+        role: profile.role,
       }}
     >
       {children}
