@@ -1,6 +1,7 @@
 import type { User } from "@supabase/supabase-js";
 
 import { createServerSupabaseClient } from "@/server/supabase/server";
+import { createServiceRoleClient } from "@/server/supabase/service-role";
 import type { Profile } from "@/types/database";
 
 export class AuthenticationError extends Error {
@@ -52,6 +53,42 @@ export async function getCurrentProfile(): Promise<Profile | null> {
     .eq("id", user.id)
     .is("deleted_at", null)
     .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (data) {
+    return data;
+  }
+
+  return ensureProfileForUser(user);
+}
+
+export async function ensureProfileForUser(user: User): Promise<Profile> {
+  const supabase = createServiceRoleClient();
+  const metadata = user.user_metadata;
+  const { data, error } = await supabase
+    .from("profiles")
+    .upsert(
+      {
+        id: user.id,
+        email: user.email?.toLowerCase() ?? "",
+        display_name:
+          typeof metadata.full_name === "string" && metadata.full_name.trim()
+            ? metadata.full_name
+            : null,
+        avatar_url:
+          typeof metadata.avatar_url === "string" && metadata.avatar_url.trim()
+            ? metadata.avatar_url
+            : null,
+      },
+      {
+        onConflict: "id",
+      }
+    )
+    .select("*")
+    .single();
 
   if (error) {
     throw error;

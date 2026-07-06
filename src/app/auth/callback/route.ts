@@ -3,6 +3,7 @@ import type { EmailOtpType } from "@supabase/supabase-js";
 
 import { AUDIT_ENTITIES, AUDIT_EVENTS } from "@/server/audit-events";
 import { writeAuditLog } from "@/server/audit";
+import { ensureProfileForUser } from "@/server/auth";
 import { getClientIp, getUserAgent } from "@/server/request";
 import { createServerSupabaseClient } from "@/server/supabase/server";
 
@@ -40,13 +41,20 @@ export async function GET(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  await writeAuditLog({
-    actorUserId: user?.id ?? null,
-    eventType: AUDIT_EVENTS.AUTH_LOGIN,
-    entityType: AUDIT_ENTITIES.AUTH,
-    ipAddress: getClientIp(request),
-    userAgent: getUserAgent(request),
-  });
+  if (user) {
+    try {
+      await ensureProfileForUser(user);
+      await writeAuditLog({
+        actorUserId: user.id,
+        eventType: AUDIT_EVENTS.AUTH_LOGIN,
+        entityType: AUDIT_ENTITIES.AUTH,
+        ipAddress: getClientIp(request),
+        userAgent: getUserAgent(request),
+      });
+    } catch (profileOrAuditError) {
+      console.error("Auth callback post-login task failed", profileOrAuditError);
+    }
+  }
 
   return NextResponse.redirect(new URL("/app", request.url));
 }
