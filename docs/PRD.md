@@ -114,20 +114,14 @@
 
 #### Features
 
-* ผู้ใช้เริ่มจดโน้ตได้โดยไม่ login
-* เก็บข้อมูลใน localStorage
-* แจ้งเตือนชัดเจนว่าข้อมูล guest อาจหาย
-* Convert guest notes เข้า account เมื่อ login/register
+* ผู้ใช้ที่ยังไม่ลงชื่อเข้าใช้งานจะเห็นหน้า Landing Page แนะนำฟีเจอร์การจดโน้ต (Website Introduction)
+* แสดงปุ่มสลับการทำงาน Theme โหมดสว่าง/มืด (Light/Dark Theme Switcher) บนหน้าแรกสุด
+* นำระบบ Local draft storage editor และระบบแจ้งเตือนข้อความนำเข้า "Import guest notes?" ออกจากแอปพลิเคชันอย่างปลอดภัย
 
 #### Business Logic & Edge Cases
 
-* หาก email ยังไม่มี account ให้สร้าง account และ import guest notes
-* หาก email มี account แล้ว ให้ login ก่อนแล้วแสดงหน้า confirm import
-* Default behavior คือ merge guest notes เป็น note ใหม่ใน account เดิม
-* ห้าม overwrite cloud notes เดิม
-* หาก title ซ้ำ ให้เติม suffix เช่น `(Imported from guest)`
-* หาก import สำเร็จจึงลบ local guest draft
-* หาก import ล้มเหลวต้องเก็บ local draft และให้ retry
+* หน้า Landing Page ดำเนินงานแบบ Static content แนะนำฟีเจอร์เด่น
+* การล็อกอินของสมาชิกจะนำเข้าสู่ Cloud Workspace หลักทันทีโดยไม่มีการเรียกแจ้งเตือน Banner นำเข้าประวัติบันทึกเดิมอีกต่อไปเพื่อความสะอาดเรียบร้อยของหน้าตาแอปพลิเคชัน
 
 ### 3.3 Notes Module
 

@@ -34,7 +34,6 @@ import { useRouter } from "next/navigation";
 import { NoteList } from "@/components/notes/note-list";
 import { useDebouncedAutosave } from "@/components/notes/use-debounced-autosave";
 import { TagChip } from "@/components/notes/tag-chip";
-import { GuestImportPrompt } from "@/components/guest/guest-import-prompt";
 
 type NoteWorkspaceProps = {
   initialNoteNotFound?: boolean;
@@ -880,11 +879,6 @@ export function NoteWorkspace({
 
   return (
     <>
-      <GuestImportPrompt
-        onImported={() => {
-          router.refresh();
-        }}
-      />
       <section className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-[96rem] flex-col gap-4 lg:grid lg:grid-cols-[20rem_minmax(0,1fr)]">
         <aside className="flex min-h-[24rem] flex-col rounded-lg border border-border bg-card">
           <div className="border-b border-border p-4">
