@@ -226,19 +226,16 @@ export function GuestWorkspace() {
               ) : (
                 <div className="flex h-full min-h-56 items-center justify-center p-6 text-center">
                   <div className="max-w-xs">
-                    <div className="mx-auto grid size-10 place-items-center rounded-md border border-border bg-muted">
-                      <AlertTriangle className="size-5 text-muted-foreground" />
-                    </div>
-                    <p className="mt-3 font-medium">No guest notes yet</p>
+                    <p className="mt-3 font-medium font-sans">No guest notes yet</p>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Press &quot;New&quot; or &quot;ทดลองจดทันที&quot; to create your first local draft.
+                      Press &quot;New&quot; or &quot;Start writing&quot; to create your first local draft.
                     </p>
                   </div>
                 </div>
               )}
             </div>
           </aside>
-
+ 
           <section className="flex min-h-[32rem] flex-col rounded-lg border border-border bg-card">
             {selectedNote ? (
               <GuestEditorPanel key={selectedNote.localId} note={selectedNote} onSave={handleSave} />
@@ -253,7 +250,7 @@ export function GuestWorkspace() {
                     Start a local draft now, then sign in later to import it into your cloud workspace.
                   </p>
                   <Button className="mt-4" onClick={createNoteAndSelect} type="button">
-                    ทดลองจดทันที
+                    Start writing
                     <ArrowRight className="size-4" aria-hidden="true" />
                   </Button>
                 </div>

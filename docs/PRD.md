@@ -51,10 +51,12 @@
 | Team Assumption | Solo developer หรือทีมเล็ก |
 | Development Priority | Data safety, security, payment reliability มาก่อน visual polish |
 | MVP Payment | Stripe ก่อน, PromptPay เป็น Phase 2 |
-| Guest Storage | localStorage ใน MVP |
+| Guest Storage | localStorage ใน MVP (ถ้าผู้ใช้อยากจะทดลองให้เพิ่มไปในหน้า billing หรือส่วนของสมาชิกเอา) |
 | Offline Support | draft recovery ชั่วคราว ไม่ใช่ full offline-first |
 | Collaboration | single-user editing with conflict detection |
 | Compliance | ต้องมี Privacy Policy, Terms, Data Deletion Policy ก่อน production |
+| Font | ปรับฟอนต์ตัวหนังสือให้เป็น Poppins |
+| Language | ให้ทั้งระบบใช้เป็นภาษาอังกฤษก่อน |
 
 ## 2. User Roles & Access Control
 

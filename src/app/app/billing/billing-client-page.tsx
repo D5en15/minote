@@ -197,85 +197,104 @@ export default function BillingClientPage() {
 
       {/* Pricing options list if not premium */}
       {!billing?.isPremium && (
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
-          {/* Monthly Plan Option */}
-          <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-6 shadow-sm">
-            <div>
-              <h4 className="text-lg font-semibold">Premium Monthly</h4>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Zen editing space billed monthly. Cancel anytime.
-              </p>
-              <div className="mt-4 flex items-baseline">
-                <span className="text-3xl font-bold">$9</span>
-                <span className="ml-1 text-sm text-muted-foreground">/month</span>
+        <div className="mt-8 space-y-6">
+          <div className="grid gap-6 sm:grid-cols-2">
+            {/* Monthly Plan Option */}
+            <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-6 shadow-sm">
+              <div>
+                <h4 className="text-lg font-semibold">Premium Monthly</h4>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Zen editing space billed monthly. Cancel anytime.
+                </p>
+                <div className="mt-4 flex items-baseline">
+                  <span className="text-3xl font-bold">$9</span>
+                  <span className="ml-1 text-sm text-muted-foreground">/month</span>
+                </div>
+                <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-emerald-500 shrink-0" />
+                    <span>Unlimited notes creation</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-emerald-500 shrink-0" />
+                    <span>Customizable read-only shares</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-emerald-500 shrink-0" />
+                    <span>Password-protected shared pages</span>
+                  </li>
+                </ul>
               </div>
-              <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <Check className="size-4 text-emerald-500 shrink-0" />
-                  <span>Unlimited notes creation</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="size-4 text-emerald-500 shrink-0" />
-                  <span>Customizable read-only shares</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="size-4 text-emerald-500 shrink-0" />
-                  <span>Password-protected shared pages</span>
-                </li>
-              </ul>
+              <Button
+                className="mt-6 w-full"
+                disabled={checkoutPending}
+                onClick={() => handleCheckout(MOCK_MONTHLY_PRICE_ID)}
+              >
+                {checkoutPending ? (
+                  <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
+                ) : null}
+                Upgrade Monthly
+              </Button>
             </div>
-            <Button
-              className="mt-6 w-full"
-              disabled={checkoutPending}
-              onClick={() => handleCheckout(MOCK_MONTHLY_PRICE_ID)}
-            >
-              {checkoutPending ? (
-                <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
-              ) : null}
-              Upgrade Monthly
-            </Button>
+
+            {/* Yearly Plan Option */}
+            <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-6 shadow-sm">
+              <div>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-lg font-semibold">Premium Yearly</h4>
+                  <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
+                    Save 20%
+                  </span>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Write note drafts consistently over a year with max savings.
+                </p>
+                <div className="mt-4 flex items-baseline">
+                  <span className="text-3xl font-bold">$89</span>
+                  <span className="ml-1 text-sm text-muted-foreground">/year</span>
+                </div>
+                <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-emerald-500 shrink-0" />
+                    <span>Unlimited notes creation</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-emerald-500 shrink-0" />
+                    <span>Customizable read-only shares</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-emerald-500 shrink-0" />
+                    <span>Password-protected shared pages</span>
+                  </li>
+                </ul>
+              </div>
+              <Button
+                className="mt-6 w-full"
+                disabled={checkoutPending}
+                onClick={() => handleCheckout(MOCK_YEARLY_PRICE_ID)}
+              >
+                {checkoutPending ? (
+                  <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
+                ) : null}
+                Upgrade Yearly
+              </Button>
+            </div>
           </div>
 
-          {/* Yearly Plan Option */}
-          <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-6 shadow-sm">
-            <div>
-              <div className="flex items-center justify-between">
-                <h4 className="text-lg font-semibold">Premium Yearly</h4>
-                <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
-                  Save 20%
-                </span>
-              </div>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Write note drafts consistently over a year with max savings.
-              </p>
-              <div className="mt-4 flex items-baseline">
-                <span className="text-3xl font-bold">$89</span>
-                <span className="ml-1 text-sm text-muted-foreground">/year</span>
-              </div>
-              <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <Check className="size-4 text-emerald-500 shrink-0" />
-                  <span>Unlimited notes creation</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="size-4 text-emerald-500 shrink-0" />
-                  <span>Customizable read-only shares</span>
-                </li>
-                <li className="flex items-center gap-2">
-                  <Check className="size-4 text-emerald-500 shrink-0" />
-                  <span>Password-protected shared pages</span>
-                </li>
-              </ul>
-            </div>
+          {/* Trial / Guest Mode Invitation block */}
+          <div className="rounded-lg border border-dashed border-border bg-muted/40 p-6 text-center">
+            <h4 className="font-semibold text-base">Want to try Minote first?</h4>
+            <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto">
+              You can start writing and testing the editor immediately in Guest Mode. Your drafts will be saved locally in this browser.
+            </p>
             <Button
-              className="mt-6 w-full"
-              disabled={checkoutPending}
-              onClick={() => handleCheckout(MOCK_YEARLY_PRICE_ID)}
+              className="mt-4"
+              onClick={() => {
+                window.location.href = "/";
+              }}
+              variant="outline"
             >
-              {checkoutPending ? (
-                <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
-              ) : null}
-              Upgrade Yearly
+              Start Local Workspace Trial
             </Button>
           </div>
         </div>
