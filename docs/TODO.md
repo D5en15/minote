@@ -457,21 +457,21 @@
 
 ## Phase 16: Security Hardening
 
-- [ ] 16.1 เพิ่ม global security headers
-- [ ] 16.2 เพิ่ม CSP สำหรับ app routes
-- [ ] 16.3 เพิ่ม CSP แบบ strict สำหรับ shared routes
-- [ ] 16.4 ปิด raw script execution บน shared page
-- [ ] 16.5 ตรวจทุก API route ว่ามี auth guard หรือ public guard ชัดเจน
-- [ ] 16.6 ตรวจทุก mutation route ว่ามี Zod validation
-- [ ] 16.7 ตรวจทุก owner-only route ว่ามี owner check
-- [ ] 16.8 ตรวจทุก service role usage ว่าไม่ใช้ใน client
-- [ ] 16.9 เพิ่ม rate limit ให้ write APIs
-- [ ] 16.10 เพิ่ม rate limit ให้ share public access
-- [ ] 16.11 เพิ่ม rate limit ให้ export endpoint
-- [ ] 16.12 เพิ่ม webhook signature verification test
-- [ ] 16.13 เพิ่ม robots policy สำหรับ shared pages
-- [ ] 16.14 เพิ่ม `noindex` metadata ให้ shared pages
-- [ ] 16.15 ทดสอบ XSS payload ใน editor/shared page
+- [x] 16.1 เพิ่ม global security headers
+- [x] 16.2 เพิ่ม CSP สำหรับ app routes
+- [x] 16.3 เพิ่ม CSP แบบ strict สำหรับ shared routes
+- [x] 16.4 ปิด raw script execution บน shared page
+- [x] 16.5 ตรวจทุก API route ว่ามี auth guard หรือ public guard ชัดเจน
+- [x] 16.6 ตรวจทุก mutation route ว่ามี Zod validation
+- [x] 16.7 ตรวจทุก owner-only route ว่ามี owner check
+- [x] 16.8 ตรวจทุก service role usage ว่าไม่ใช้ใน client
+- [x] 16.9 เพิ่ม rate limit ให้ write APIs
+- [x] 16.10 เพิ่ม rate limit ให้ share public access
+- [x] 16.11 เพิ่ม rate limit ให้ export endpoint
+- [x] 16.12 เพิ่ม webhook signature verification test
+- [x] 16.13 เพิ่ม robots policy สำหรับ shared pages
+- [x] 16.14 เพิ่ม `noindex` metadata ให้ shared pages
+- [x] 16.15 ทดสอบ XSS payload ใน editor/shared page
 
 ## Phase 17: Observability & Production Readiness
 

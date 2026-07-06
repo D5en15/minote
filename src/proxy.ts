@@ -4,23 +4,30 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/types/database";
 
 export async function proxy(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith("/share/")) {
-    const response = NextResponse.next({
-      request,
-    });
+  const response = NextResponse.next({
+    request,
+  });
 
-    response.headers.set(
+  const responseWithHeaders = response;
+
+  // Apply Global Security Hardening Headers (16.1)
+  responseWithHeaders.headers.set("X-Content-Type-Options", "nosniff");
+  responseWithHeaders.headers.set("X-Frame-Options", "DENY");
+  responseWithHeaders.headers.set("X-XSS-Protection", "1; mode=block");
+  responseWithHeaders.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  responseWithHeaders.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
+  if (request.nextUrl.pathname.startsWith("/share/")) {
+    responseWithHeaders.headers.set(
       "Content-Security-Policy",
       "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
     );
-    response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
-    response.headers.set("X-Robots-Tag", "noindex, nofollow");
-    return response;
+    responseWithHeaders.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+    responseWithHeaders.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return responseWithHeaders;
   }
 
-  let response = NextResponse.next({
-    request,
-  });
+  let responseWithAuth = responseWithHeaders;
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -34,11 +41,18 @@ export async function proxy(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) => {
             request.cookies.set(name, value);
           });
-          response = NextResponse.next({
+          responseWithAuth = NextResponse.next({
             request,
           });
+          // Copy global security headers to new NextResponse object
+          responseWithAuth.headers.set("X-Content-Type-Options", "nosniff");
+          responseWithAuth.headers.set("X-Frame-Options", "DENY");
+          responseWithAuth.headers.set("X-XSS-Protection", "1; mode=block");
+          responseWithAuth.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+          responseWithAuth.headers.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload");
+
           cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options);
+            responseWithAuth.cookies.set(name, value, options);
           });
         },
       },
@@ -55,8 +69,13 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  response.headers.set("Cache-Control", "private, no-store");
-  return response;
+  // App routes CSP setup (16.2)
+  responseWithAuth.headers.set(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
+  );
+  responseWithAuth.headers.set("Cache-Control", "private, no-store");
+  return responseWithAuth;
 }
 
 export const config = {
