@@ -1,32 +1,32 @@
-import { redirect } from "next/navigation";
+import { FileText, Plus } from "lucide-react";
 
-import { LogoutButton } from "@/components/auth/logout-button";
-import { getCurrentProfile } from "@/server/auth";
+import { Button } from "@/components/ui/button";
 
-export default async function AppHomePage() {
-  const profile = await getCurrentProfile();
-
-  if (!profile) {
-    redirect("/");
-  }
-
+export default function AppHomePage() {
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-4xl flex-col px-6 py-8">
-      <nav className="flex items-center justify-between border-b border-border pb-4">
+    <section className="mx-auto flex min-h-[calc(100vh-7rem)] w-full max-w-5xl flex-col">
+      <div className="flex flex-col gap-3 border-b border-border pb-5 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm text-muted-foreground">Minote workspace</p>
-          <h1 className="text-2xl font-semibold">Notes</h1>
+          <p className="text-sm text-muted-foreground">All notes</p>
+          <h2 className="text-2xl font-semibold">Workspace</h2>
         </div>
-        <LogoutButton />
-      </nav>
-      <section className="flex flex-1 items-center justify-center py-20 text-center">
-        <div>
-          <p className="text-lg font-medium">No notes yet</p>
+        <Button type="button" disabled>
+          <Plus className="size-4" aria-hidden="true" />
+          New note
+        </Button>
+      </div>
+
+      <div className="flex flex-1 items-center justify-center py-16 text-center">
+        <div className="mx-auto max-w-sm">
+          <div className="mx-auto grid size-12 place-items-center rounded-md border border-border bg-muted">
+            <FileText className="size-5 text-muted-foreground" aria-hidden="true" />
+          </div>
+          <h3 className="mt-4 text-lg font-semibold">No notes yet</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            Your notes will appear here.
+            Your notes will appear here after the notes API and editor are ready.
           </p>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }

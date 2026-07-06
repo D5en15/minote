@@ -129,7 +129,7 @@
 - [x] 3.1 ตั้งค่า Supabase Auth ให้เปิด Email Magic Link
 - [x] 3.2 ตั้งค่า Supabase Auth ให้เปิด Google OAuth
 - [x] 3.3 เพิ่ม allowed redirect URL สำหรับ local development
-- [ ] 3.4 เพิ่ม allowed redirect URL สำหรับ production
+- [x] 3.4 เพิ่ม allowed redirect URL สำหรับ production
 - [x] 3.5 สร้าง route `/auth/callback`
 - [x] 3.6 เขียน logic ใน `/auth/callback` เพื่อ exchange auth code เป็น session
 - [x] 3.7 เขียน redirect หลัง login สำเร็จไป `/app`
@@ -151,26 +151,26 @@
 - [x] 3.23 แสดง error state เมื่อ rate limit หรือ email invalid
 - [x] 3.24 สร้างปุ่ม Google OAuth
 - [x] 3.25 เชื่อมปุ่ม Google OAuth กับ Supabase sign-in
-- [ ] 3.26 ทดสอบ login ด้วย Magic Link
-- [ ] 3.27 ทดสอบ login ด้วย Google OAuth
-- [ ] 3.28 ทดสอบ logout แล้วเข้า `/app` ไม่ได้
+- [x] 3.26 ทดสอบ login ด้วย Magic Link
+- [x] 3.27 ทดสอบ login ด้วย Google OAuth
+- [x] 3.28 ทดสอบ logout แล้วเข้า `/app` ไม่ได้
 
 ## Phase 4: App Shell & Navigation
 
-- [ ] 4.1 สร้าง layout สำหรับ `/app`
-- [ ] 4.2 สร้าง sidebar container
-- [ ] 4.3 สร้าง top bar สำหรับ workspace
-- [ ] 4.4 สร้าง user menu ใน top bar
-- [ ] 4.5 เพิ่ม logout action ใน user menu
-- [ ] 4.6 สร้าง navigation link ไป workspace
-- [ ] 4.7 สร้าง navigation link ไป trash
-- [ ] 4.8 สร้าง navigation link ไป billing
-- [ ] 4.9 สร้าง navigation link ไป settings
-- [ ] 4.10 สร้าง loading state สำหรับ app shell
-- [ ] 4.11 สร้าง empty state สำหรับยังไม่มี note
-- [ ] 4.12 ตั้งค่า responsive layout สำหรับ mobile
-- [ ] 4.13 ตั้งค่า dark/light theme toggle พื้นฐาน
-- [ ] 4.14 เก็บ theme preference ใน localStorage
+- [x] 4.1 สร้าง layout สำหรับ `/app`
+- [x] 4.2 สร้าง sidebar container
+- [x] 4.3 สร้าง top bar สำหรับ workspace
+- [x] 4.4 สร้าง user menu ใน top bar
+- [x] 4.5 เพิ่ม logout action ใน user menu
+- [x] 4.6 สร้าง navigation link ไป workspace
+- [x] 4.7 สร้าง navigation link ไป trash
+- [x] 4.8 สร้าง navigation link ไป billing
+- [x] 4.9 สร้าง navigation link ไป settings
+- [x] 4.10 สร้าง loading state สำหรับ app shell
+- [x] 4.11 สร้าง empty state สำหรับยังไม่มี note
+- [x] 4.12 ตั้งค่า responsive layout สำหรับ mobile
+- [x] 4.13 ตั้งค่า dark/light theme toggle พื้นฐาน
+- [x] 4.14 เก็บ theme preference ใน localStorage
 
 ## Phase 5: Notes Backend
 
