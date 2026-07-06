@@ -196,6 +196,15 @@ export async function POST(request: NextRequest) {
 
     return successResponse({ processed: true });
   } catch (error) {
+    const errObj = error instanceof Error ? error : new Error(String(error));
+    // Log error to observability pipeline (17.6)
+    const { logError } = await import("@/server/logger");
+    await logError({
+      message: errObj.message,
+      severity: "error",
+      context: "stripe_webhook",
+      errorStack: errObj.stack,
+    });
     console.error("Stripe Webhook Processing Error:", error);
     return errorResponse("INTERNAL_ERROR", "Stripe webhook execution failure");
   }

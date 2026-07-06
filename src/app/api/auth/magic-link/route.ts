@@ -80,6 +80,16 @@ export async function POST(request: NextRequest) {
   });
 
   if (error) {
+    // Log auth email errors (17.7)
+    const { logError } = await import("@/server/logger");
+    await logError({
+      message: error.message,
+      severity: "error",
+      context: "email_auth_failed",
+      metadata: {
+        emailDomain: parsed.data.email.split("@")[1] ?? null,
+      },
+    });
     return errorResponse("INTERNAL_ERROR", "Unable to send sign-in email");
   }
 

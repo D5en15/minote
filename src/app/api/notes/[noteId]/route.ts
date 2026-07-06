@@ -121,7 +121,17 @@ export async function PATCH(request: NextRequest, context: NoteRouteContext) {
     }
 
     return successResponse({ note: result.note });
-  } catch {
+  } catch (error) {
+    const errObj = error instanceof Error ? error : new Error(String(error));
+    // Log error to observability pipeline (17.4)
+    const { logError } = await import("@/server/logger");
+    await logError({
+      message: errObj.message,
+      severity: "error",
+      context: "autosave_failed",
+      userId: user.id,
+      errorStack: errObj.stack,
+    });
     return errorResponse("INTERNAL_ERROR", "Unable to update note");
   }
 }

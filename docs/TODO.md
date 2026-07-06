@@ -475,19 +475,19 @@
 
 ## Phase 17: Observability & Production Readiness
 
-- [ ] 17.1 ติดตั้ง Sentry หรือ error tracking ที่เลือก
-- [ ] 17.2 ตั้งค่า client-side error tracking
-- [ ] 17.3 ตั้งค่า server-side error tracking
-- [ ] 17.4 log error เมื่อ autosave failed
-- [ ] 17.5 log error เมื่อ guest import failed
-- [ ] 17.6 log error เมื่อ Stripe webhook failed
-- [ ] 17.7 log error เมื่อ email auth request failed
-- [ ] 17.8 เพิ่ม health check route
-- [ ] 17.9 สร้าง production env checklist
-- [ ] 17.10 ตรวจ backup policy ของ Supabase project
-- [ ] 17.11 ตรวจ Stripe webhook endpoint production
-- [ ] 17.12 ตรวจ Supabase redirect URLs production
-- [ ] 17.13 ตรวจ domain และ HTTPS
+- [x] 17.1 ติดตั้ง Sentry หรือ error tracking ที่เลือก
+- [x] 17.2 ตั้งค่า client-side error tracking
+- [x] 17.3 ตั้งค่า server-side error tracking
+- [x] 17.4 log error เมื่อ autosave failed
+- [x] 17.5 log error เมื่อ guest import failed
+- [x] 17.6 log error เมื่อ Stripe webhook failed
+- [x] 17.7 log error เมื่อ email auth request failed
+- [x] 17.8 เพิ่ม health check route
+- [x] 17.9 สร้าง production env checklist
+- [x] 17.10 ตรวจ backup policy ของ Supabase project
+- [x] 17.11 ตรวจ Stripe webhook endpoint production
+- [x] 17.12 ตรวจ Supabase redirect URLs production
+- [x] 17.13 ตรวจ domain และ HTTPS
 
 ## Phase 18: Testing & QA
 
