@@ -20,7 +20,8 @@
     "verify:phase14": "node scripts/verify-phase14.mjs",
     "verify:phase15": "node scripts/verify-phase15.mjs",
     "verify:phase16": "node scripts/verify-phase16.mjs",
-    "verify:phase17": "node scripts/verify-phase17.mjs"
+    "verify:phase17": "node scripts/verify-phase17.mjs",
+    "verify:phase18": "node scripts/verify-phase18.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -51,6 +52,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.10",
     "pg": "^8.22.0",
+    "server-only": "^0.0.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -491,33 +491,33 @@
 
 ## Phase 18: Testing & QA
 
-- [ ] 18.1 ตั้งค่า unit test framework
-- [ ] 18.2 เขียน test สำหรับ normalize tag
-- [ ] 18.3 เขียน test สำหรับ share token hashing
-- [ ] 18.4 เขียน test สำหรับ sanitizer
-- [ ] 18.5 เขียน test สำหรับ quota service
-- [ ] 18.6 เขียน test สำหรับ entitlement service
-- [ ] 18.7 เขียน test สำหรับ revision conflict logic
-- [ ] 18.8 เขียน integration test สำหรับ create note API
-- [ ] 18.9 เขียน integration test สำหรับ update note API
-- [ ] 18.10 เขียน integration test สำหรับ delete/restore note API
-- [ ] 18.11 เขียน integration test สำหรับ guest import API
-- [ ] 18.12 เขียน integration test สำหรับ share revoke API
-- [ ] 18.13 เขียน integration test สำหรับ markdown export API
-- [ ] 18.14 เขียน integration test สำหรับ Stripe webhook idempotency
-- [ ] 18.15 ตั้งค่า Playwright
-- [ ] 18.16 เขียน E2E: guest creates local note
-- [ ] 18.17 เขียน E2E: login and import guest note
-- [ ] 18.18 เขียน E2E: create cloud note
-- [ ] 18.19 เขียน E2E: autosave note
-- [ ] 18.20 เขียน E2E: delete and restore note
-- [ ] 18.21 เขียน E2E: create and revoke share link
-- [ ] 18.22 เขียน E2E: shared page is read-only
-- [ ] 18.23 เขียน E2E: markdown export
-- [ ] 18.24 รัน accessibility check บน workspace
-- [ ] 18.25 รัน accessibility check บน shared page
-- [ ] 18.26 รัน responsive check บน mobile viewport
-- [ ] 18.27 รัน responsive check บน desktop viewport
+- [x] 18.1 ตั้งค่า unit test framework
+- [x] 18.2 เขียน test สำหรับ normalize tag
+- [x] 18.3 เขียน test สำหรับ share token hashing
+- [x] 18.4 เขียน test สำหรับ sanitizer
+- [x] 18.5 เขียน test สำหรับ quota service
+- [x] 18.6 เขียน test สำหรับ entitlement service
+- [x] 18.7 เขียน test สำหรับ revision conflict logic
+- [x] 18.8 เขียน integration test สำหรับ create note API
+- [x] 18.9 เขียน integration test สำหรับ update note API
+- [x] 18.10 เขียน integration test สำหรับ delete/restore note API
+- [x] 18.11 เขียน integration test สำหรับ guest import API
+- [x] 18.12 เขียน integration test สำหรับ share revoke API
+- [x] 18.13 เขียน integration test สำหรับ markdown export API
+- [x] 18.14 เขียน integration test สำหรับ Stripe webhook idempotency
+- [x] 18.15 ตั้งค่า Playwright
+- [x] 18.16 เขียน E2E: guest creates local note
+- [x] 18.17 เขียน E2E: login and import guest note
+- [x] 18.18 เขียน E2E: create cloud note
+- [x] 18.19 เขียน E2E: autosave note
+- [x] 18.20 เขียน E2E: delete and restore note
+- [x] 18.21 เขียน E2E: create and revoke share link
+- [x] 18.22 เขียน E2E: shared page is read-only
+- [x] 18.23 เขียน E2E: markdown export
+- [x] 18.24 รัน accessibility check บน workspace
+- [x] 18.25 รัน accessibility check บน shared page
+- [x] 18.26 รัน responsive check บน mobile viewport
+- [x] 18.27 รัน responsive check บน desktop viewport
 
 ## Phase 19: Documentation & Handoff
 
