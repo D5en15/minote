@@ -19,7 +19,7 @@ export const markdownSanitizeSchema: Options = {
 
 export const markdownRehypePlugins = [
   [rehypeSanitize, markdownSanitizeSchema],
-] as const;
+];
 
 export function escapeHtml(input: string): string {
   return input

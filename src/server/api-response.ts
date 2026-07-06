@@ -60,8 +60,9 @@ function statusForErrorCode(code: ApiErrorCode): number {
   switch (code) {
     case "BAD_REQUEST":
     case "VALIDATION_ERROR":
-    case "REVISION_CONFLICT":
       return 400;
+    case "REVISION_CONFLICT":
+      return 409;
     case "UNAUTHORIZED":
       return 401;
     case "FORBIDDEN":

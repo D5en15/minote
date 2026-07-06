@@ -311,4 +311,15 @@ export type Plan = TableRow<"plans">;
 export type Subscription = TableRow<"subscriptions">;
 export type Note = TableRow<"notes">;
 export type Tag = TableRow<"tags">;
+export type ActiveShareLinkSummary = {
+  id: string;
+  accessMode: ShareAccessMode;
+  createdAt: string;
+  expiresAt: string | null;
+  status: ShareLinkStatus;
+};
+export type NoteWithTags = Note & {
+  tags: Tag[];
+  activeShareLink?: ActiveShareLinkSummary | null;
+};
 export type ShareLink = TableRow<"share_links">;

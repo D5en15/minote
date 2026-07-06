@@ -19,12 +19,12 @@ export function getUserAgent(request: NextRequest): string | null {
 }
 
 export function getAppBaseUrl(request?: NextRequest): string {
-  if (process.env.NEXT_PUBLIC_APP_URL) {
-    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
-  }
-
   if (request) {
     return request.nextUrl.origin;
+  }
+
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
   }
 
   return "http://localhost:3000";

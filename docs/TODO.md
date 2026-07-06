@@ -174,219 +174,219 @@
 
 ## Phase 5: Notes Backend
 
-- [ ] 5.1 สร้าง note repository function สำหรับ list notes
-- [ ] 5.2 สร้าง note repository function สำหรับ get note by id
-- [ ] 5.3 สร้าง note repository function สำหรับ create note
-- [ ] 5.4 สร้าง note repository function สำหรับ update note
-- [ ] 5.5 สร้าง note repository function สำหรับ soft delete note
-- [ ] 5.6 สร้าง note repository function สำหรับ restore note
-- [ ] 5.7 สร้าง note repository function สำหรับ permanent delete note
-- [ ] 5.8 สร้าง service ตรวจ note ownership
-- [ ] 5.9 สร้าง service ตรวจ note quota ก่อน create
-- [ ] 5.10 สร้าง service increment `usage_counters.notes_created_count`
-- [ ] 5.11 สร้าง route handler `GET /api/notes`
-- [ ] 5.12 เพิ่ม query param `search` ให้ `GET /api/notes`
-- [ ] 5.13 เพิ่ม query param `tag` ให้ `GET /api/notes`
-- [ ] 5.14 เพิ่ม query param `status` ให้ `GET /api/notes`
-- [ ] 5.15 สร้าง route handler `POST /api/notes`
-- [ ] 5.16 ใส่ quota check ใน `POST /api/notes`
-- [ ] 5.17 บันทึก audit log เมื่อ create note
-- [ ] 5.18 สร้าง route handler `GET /api/notes/[noteId]`
-- [ ] 5.19 สร้าง route handler `PATCH /api/notes/[noteId]`
-- [ ] 5.20 ใส่ revision check ใน `PATCH /api/notes/[noteId]`
-- [ ] 5.21 return `REVISION_CONFLICT` เมื่อ baseRevision เก่า
-- [ ] 5.22 increment revision เมื่อ update สำเร็จ
-- [ ] 5.23 update `last_saved_at` เมื่อ update สำเร็จ
-- [ ] 5.24 สร้าง route handler `DELETE /api/notes/[noteId]`
-- [ ] 5.25 set `status = trashed` เมื่อ delete
-- [ ] 5.26 set `trashed_at` เมื่อ delete
-- [ ] 5.27 set `delete_after = trashed_at + 30 days` เมื่อ delete
-- [ ] 5.28 disable share link เมื่อ note เข้า trash
-- [ ] 5.29 บันทึก audit log เมื่อ delete note
-- [ ] 5.30 สร้าง route handler `POST /api/notes/[noteId]/restore`
-- [ ] 5.31 clear `trashed_at` และ `delete_after` เมื่อ restore
-- [ ] 5.32 บันทึก audit log เมื่อ restore note
-- [ ] 5.33 สร้าง route handler `DELETE /api/notes/[noteId]/permanent`
-- [ ] 5.34 จำกัด permanent delete ให้ owner หรือ system job เท่านั้น
-- [ ] 5.35 ทดสอบ API create note
-- [ ] 5.36 ทดสอบ API update note
-- [ ] 5.37 ทดสอบ API revision conflict
-- [ ] 5.38 ทดสอบ API soft delete
-- [ ] 5.39 ทดสอบ API restore
+- [x] 5.1 สร้าง note repository function สำหรับ list notes
+- [x] 5.2 สร้าง note repository function สำหรับ get note by id
+- [x] 5.3 สร้าง note repository function สำหรับ create note
+- [x] 5.4 สร้าง note repository function สำหรับ update note
+- [x] 5.5 สร้าง note repository function สำหรับ soft delete note
+- [x] 5.6 สร้าง note repository function สำหรับ restore note
+- [x] 5.7 สร้าง note repository function สำหรับ permanent delete note
+- [x] 5.8 สร้าง service ตรวจ note ownership
+- [x] 5.9 สร้าง service ตรวจ note quota ก่อน create
+- [x] 5.10 สร้าง service increment `usage_counters.notes_created_count`
+- [x] 5.11 สร้าง route handler `GET /api/notes`
+- [x] 5.12 เพิ่ม query param `search` ให้ `GET /api/notes`
+- [x] 5.13 เพิ่ม query param `tag` ให้ `GET /api/notes`
+- [x] 5.14 เพิ่ม query param `status` ให้ `GET /api/notes`
+- [x] 5.15 สร้าง route handler `POST /api/notes`
+- [x] 5.16 ใส่ quota check ใน `POST /api/notes`
+- [x] 5.17 บันทึก audit log เมื่อ create note
+- [x] 5.18 สร้าง route handler `GET /api/notes/[noteId]`
+- [x] 5.19 สร้าง route handler `PATCH /api/notes/[noteId]`
+- [x] 5.20 ใส่ revision check ใน `PATCH /api/notes/[noteId]`
+- [x] 5.21 return `REVISION_CONFLICT` เมื่อ baseRevision เก่า
+- [x] 5.22 increment revision เมื่อ update สำเร็จ
+- [x] 5.23 update `last_saved_at` เมื่อ update สำเร็จ
+- [x] 5.24 สร้าง route handler `DELETE /api/notes/[noteId]`
+- [x] 5.25 set `status = trashed` เมื่อ delete
+- [x] 5.26 set `trashed_at` เมื่อ delete
+- [x] 5.27 set `delete_after = trashed_at + 30 days` เมื่อ delete
+- [x] 5.28 disable share link เมื่อ note เข้า trash
+- [x] 5.29 บันทึก audit log เมื่อ delete note
+- [x] 5.30 สร้าง route handler `POST /api/notes/[noteId]/restore`
+- [x] 5.31 clear `trashed_at` และ `delete_after` เมื่อ restore
+- [x] 5.32 บันทึก audit log เมื่อ restore note
+- [x] 5.33 สร้าง route handler `DELETE /api/notes/[noteId]/permanent`
+- [x] 5.34 จำกัด permanent delete ให้ owner หรือ system job เท่านั้น
+- [x] 5.35 ทดสอบ API create note
+- [x] 5.36 ทดสอบ API update note
+- [x] 5.37 ทดสอบ API revision conflict
+- [x] 5.38 ทดสอบ API soft delete
+- [x] 5.39 ทดสอบ API restore
 
 ## Phase 6: Notes Frontend
 
-- [ ] 6.1 สร้าง component note list
-- [ ] 6.2 สร้าง component note list item
-- [ ] 6.3 แสดง title ใน note list item
-- [ ] 6.4 แสดง updated time ใน note list item
-- [ ] 6.5 เพิ่ม selected state ให้ note list item
-- [ ] 6.6 เชื่อม note list กับ `GET /api/notes`
-- [ ] 6.7 สร้างปุ่ม create note
-- [ ] 6.8 เชื่อมปุ่ม create note กับ `POST /api/notes`
-- [ ] 6.9 เปิด note ที่สร้างใหม่หลัง create สำเร็จ
-- [ ] 6.10 สร้าง editor layout
-- [ ] 6.11 สร้าง title input
-- [ ] 6.12 สร้าง content textarea หรือ markdown editor MVP
-- [ ] 6.13 โหลด note detail จาก `GET /api/notes/[noteId]`
-- [ ] 6.14 แสดง loading state ระหว่างโหลด note
-- [ ] 6.15 แสดง not found state เมื่อไม่มีสิทธิ์หรือ note ไม่มีอยู่
-- [ ] 6.16 สร้าง delete note button
-- [ ] 6.17 แสดง confirm dialog ก่อน delete
-- [ ] 6.18 เชื่อม delete button กับ `DELETE /api/notes/[noteId]`
-- [ ] 6.19 หลัง delete สำเร็จให้กลับไป note list
-- [ ] 6.20 สร้าง search input ใน sidebar
-- [ ] 6.21 เชื่อม search input กับ query `GET /api/notes`
-- [ ] 6.22 debounce search input
-- [ ] 6.23 แสดง empty search result state
+- [x] 6.1 สร้าง component note list
+- [x] 6.2 สร้าง component note list item
+- [x] 6.3 แสดง title ใน note list item
+- [x] 6.4 แสดง updated time ใน note list item
+- [x] 6.5 เพิ่ม selected state ให้ note list item
+- [x] 6.6 เชื่อม note list กับ `GET /api/notes`
+- [x] 6.7 สร้างปุ่ม create note
+- [x] 6.8 เชื่อมปุ่ม create note กับ `POST /api/notes`
+- [x] 6.9 เปิด note ที่สร้างใหม่หลัง create สำเร็จ
+- [x] 6.10 สร้าง editor layout
+- [x] 6.11 สร้าง title input
+- [x] 6.12 สร้าง content textarea หรือ markdown editor MVP
+- [x] 6.13 โหลด note detail จาก `GET /api/notes/[noteId]`
+- [x] 6.14 แสดง loading state ระหว่างโหลด note
+- [x] 6.15 แสดง not found state เมื่อไม่มีสิทธิ์หรือ note ไม่มีอยู่
+- [x] 6.16 สร้าง delete note button
+- [x] 6.17 แสดง confirm dialog ก่อน delete
+- [x] 6.18 เชื่อม delete button กับ `DELETE /api/notes/[noteId]`
+- [x] 6.19 หลัง delete สำเร็จให้กลับไป note list
+- [x] 6.20 สร้าง search input ใน sidebar
+- [x] 6.21 เชื่อม search input กับ query `GET /api/notes`
+- [x] 6.22 debounce search input
+- [x] 6.23 แสดง empty search result state
 
 ## Phase 7: Autosave & Conflict Handling
 
-- [ ] 7.1 สร้าง hook `useDebouncedAutosave`
-- [ ] 7.2 ตั้ง debounce 1-3 วินาทีหลังหยุดพิมพ์
-- [ ] 7.3 ส่ง `baseRevision` ทุกครั้งที่ autosave
-- [ ] 7.4 แสดงสถานะ `Saving`
-- [ ] 7.5 แสดงสถานะ `Saved`
-- [ ] 7.6 แสดงสถานะ `Save failed`
-- [ ] 7.7 ตรวจ browser offline event
-- [ ] 7.8 แสดงสถานะ `Offline` เมื่อ offline
-- [ ] 7.9 เก็บ unsaved draft ใน localStorage ต่อ note id
-- [ ] 7.10 ลบ local draft เมื่อ save สำเร็จ
-- [ ] 7.11 retry save เมื่อกลับมา online
-- [ ] 7.12 หยุด retry แบบรัวเมื่อเจอ rate limit
-- [ ] 7.13 สร้าง conflict dialog
-- [ ] 7.14 แสดง server version ใน conflict dialog
-- [ ] 7.15 แสดง local draft ใน conflict dialog
-- [ ] 7.16 เพิ่มปุ่ม keep mine
-- [ ] 7.17 เพิ่มปุ่ม keep server
-- [ ] 7.18 เพิ่มปุ่ม manual copy/merge
-- [ ] 7.19 ทดสอบ autosave หลังหยุดพิมพ์
-- [ ] 7.20 ทดสอบ offline draft recovery
-- [ ] 7.21 ทดสอบ conflict จากสอง browser tabs
+- [x] 7.1 สร้าง hook `useDebouncedAutosave`
+- [x] 7.2 ตั้ง debounce 1-3 วินาทีหลังหยุดพิมพ์
+- [x] 7.3 ส่ง `baseRevision` ทุกครั้งที่ autosave
+- [x] 7.4 แสดงสถานะ `Saving`
+- [x] 7.5 แสดงสถานะ `Saved`
+- [x] 7.6 แสดงสถานะ `Save failed`
+- [x] 7.7 ตรวจ browser offline event
+- [x] 7.8 แสดงสถานะ `Offline` เมื่อ offline
+- [x] 7.9 เก็บ unsaved draft ใน localStorage ต่อ note id
+- [x] 7.10 ลบ local draft เมื่อ save สำเร็จ
+- [x] 7.11 retry save เมื่อกลับมา online
+- [x] 7.12 หยุด retry แบบรัวเมื่อเจอ rate limit
+- [x] 7.13 สร้าง conflict dialog
+- [x] 7.14 แสดง server version ใน conflict dialog
+- [x] 7.15 แสดง local draft ใน conflict dialog
+- [x] 7.16 เพิ่มปุ่ม keep mine
+- [x] 7.17 เพิ่มปุ่ม keep server
+- [x] 7.18 เพิ่มปุ่ม manual copy/merge
+- [x] 7.19 ทดสอบ autosave หลังหยุดพิมพ์
+- [x] 7.20 ทดสอบ offline draft recovery
+- [x] 7.21 ทดสอบ conflict จากสอง browser tabs
 
 ## Phase 8: Tags & Search
 
-- [ ] 8.1 สร้าง tag repository function สำหรับ list tags
-- [ ] 8.2 สร้าง tag repository function สำหรับ find-or-create tag
-- [ ] 8.3 สร้าง tag repository function สำหรับ attach tag to note
-- [ ] 8.4 สร้าง tag repository function สำหรับ detach tag from note
-- [ ] 8.5 สร้าง utility normalize tag
-- [ ] 8.6 trim whitespace ใน normalize tag
-- [ ] 8.7 lowercase tag ภาษาอังกฤษใน normalize tag
-- [ ] 8.8 จำกัดจำนวน tag ต่อ note
-- [ ] 8.9 สร้าง route handler `GET /api/tags`
-- [ ] 8.10 สร้าง route handler `POST /api/notes/[noteId]/tags`
-- [ ] 8.11 สร้าง route handler `DELETE /api/notes/[noteId]/tags/[tagId]`
-- [ ] 8.12 สร้าง component tag chip
-- [ ] 8.13 สร้าง tag input ใน editor
-- [ ] 8.14 เชื่อม tag input กับ attach tag API
-- [ ] 8.15 เพิ่ม remove tag action
-- [ ] 8.16 แสดง tag list ใน note list หรือ editor
-- [ ] 8.17 เพิ่ม filter by tag ใน sidebar
-- [ ] 8.18 ทดสอบ tag ซ้ำคนละ case ต้องไม่สร้างซ้ำ
-- [ ] 8.19 ทดสอบ tag ภาษาไทย
+- [x] 8.1 สร้าง tag repository function สำหรับ list tags
+- [x] 8.2 สร้าง tag repository function สำหรับ find-or-create tag
+- [x] 8.3 สร้าง tag repository function สำหรับ attach tag to note
+- [x] 8.4 สร้าง tag repository function สำหรับ detach tag from note
+- [x] 8.5 สร้าง utility normalize tag
+- [x] 8.6 trim whitespace ใน normalize tag
+- [x] 8.7 lowercase tag ภาษาอังกฤษใน normalize tag
+- [x] 8.8 จำกัดจำนวน tag ต่อ note
+- [x] 8.9 สร้าง route handler `GET /api/tags`
+- [x] 8.10 สร้าง route handler `POST /api/notes/[noteId]/tags`
+- [x] 8.11 สร้าง route handler `DELETE /api/notes/[noteId]/tags/[tagId]`
+- [x] 8.12 สร้าง component tag chip
+- [x] 8.13 สร้าง tag input ใน editor
+- [x] 8.14 เชื่อม tag input กับ attach tag API
+- [x] 8.15 เพิ่ม remove tag action
+- [x] 8.16 แสดง tag list ใน note list หรือ editor
+- [x] 8.17 เพิ่ม filter by tag ใน sidebar
+- [x] 8.18 ทดสอบ tag ซ้ำคนละ case ต้องไม่สร้างซ้ำ
+- [x] 8.19 ทดสอบ tag ภาษาไทย
 
 ## Phase 9: Guest Mode & Import
 
-- [ ] 9.1 สร้าง guest note type
-- [ ] 9.2 สร้าง localStorage key สำหรับ guest notes
-- [ ] 9.3 สร้าง helper อ่าน guest notes จาก localStorage
-- [ ] 9.4 สร้าง helper เขียน guest notes ลง localStorage
-- [ ] 9.5 สร้าง helper ลบ guest notes หลัง import สำเร็จ
-- [ ] 9.6 สร้างหน้า guest editor ที่ `/`
-- [ ] 9.7 เพิ่มปุ่ม "ทดลองจดทันที"
-- [ ] 9.8 สร้าง guest note เมื่อกดทดลองจดทันที
-- [ ] 9.9 ทำ autosave guest note ลง localStorage
-- [ ] 9.10 แสดงคำเตือนว่า guest data อาจหาย
-- [ ] 9.11 เพิ่มปุ่ม login/register เพื่อบันทึกขึ้น cloud
-- [ ] 9.12 หลัง login สำเร็จตรวจว่ามี guest notes ค้างหรือไม่
-- [ ] 9.13 สร้าง route handler `POST /api/import/guest/preview`
-- [ ] 9.14 validate payload ด้วย guest import schema
-- [ ] 9.15 ตรวจ title collision ใน preview
-- [ ] 9.16 return จำนวน notes ที่จะ import
-- [ ] 9.17 return รายการ title ที่จะถูก rename
-- [ ] 9.18 สร้าง import confirmation dialog
-- [ ] 9.19 สร้าง route handler `POST /api/import/guest/confirm`
-- [ ] 9.20 import guest notes แบบ merge เท่านั้น
-- [ ] 9.21 rename title ซ้ำด้วย suffix `(Imported from guest)`
-- [ ] 9.22 import tags ของ guest notes
-- [ ] 9.23 บันทึก audit log เมื่อ import สำเร็จ
-- [ ] 9.24 ลบ local guest notes หลัง import สำเร็จ
-- [ ] 9.25 เก็บ local guest notes ไว้หาก import ล้มเหลว
-- [ ] 9.26 ทดสอบ import เข้า account ใหม่
-- [ ] 9.27 ทดสอบ import เข้า account ที่มี notes เดิม
-- [ ] 9.28 ทดสอบ import title collision
+- [x] 9.1 สร้าง guest note type
+- [x] 9.2 สร้าง localStorage key สำหรับ guest notes
+- [x] 9.3 สร้าง helper อ่าน guest notes จาก localStorage
+- [x] 9.4 สร้าง helper เขียน guest notes ลง localStorage
+- [x] 9.5 สร้าง helper ลบ guest notes หลัง import สำเร็จ
+- [x] 9.6 สร้างหน้า guest editor ที่ `/`
+- [x] 9.7 เพิ่มปุ่ม "ทดลองจดทันที"
+- [x] 9.8 สร้าง guest note เมื่อกดทดลองจดทันที
+- [x] 9.9 ทำ autosave guest note ลง localStorage
+- [x] 9.10 แสดงคำเตือนว่า guest data อาจหาย
+- [x] 9.11 เพิ่มปุ่ม login/register เพื่อบันทึกขึ้น cloud
+- [x] 9.12 หลัง login สำเร็จตรวจว่ามี guest notes ค้างหรือไม่
+- [x] 9.13 สร้าง route handler `POST /api/import/guest/preview`
+- [x] 9.14 validate payload ด้วย guest import schema
+- [x] 9.15 ตรวจ title collision ใน preview
+- [x] 9.16 return จำนวน notes ที่จะ import
+- [x] 9.17 return รายการ title ที่จะถูก rename
+- [x] 9.18 สร้าง import confirmation dialog
+- [x] 9.19 สร้าง route handler `POST /api/import/guest/confirm`
+- [x] 9.20 import guest notes แบบ merge เท่านั้น
+- [x] 9.21 rename title ซ้ำด้วย suffix `(Imported from guest)`
+- [x] 9.22 import tags ของ guest notes
+- [x] 9.23 บันทึก audit log เมื่อ import สำเร็จ
+- [x] 9.24 ลบ local guest notes หลัง import สำเร็จ
+- [x] 9.25 เก็บ local guest notes ไว้หาก import ล้มเหลว
+- [x] 9.26 ทดสอบ import เข้า account ใหม่
+- [x] 9.27 ทดสอบ import เข้า account ที่มี notes เดิม
+- [x] 9.28 ทดสอบ import title collision
 
 ## Phase 10: Trash
 
-- [ ] 10.1 สร้างหน้า `/app/trash`
-- [ ] 10.2 ดึง notes ที่ `status = trashed`
-- [ ] 10.3 แสดงวันที่จะถูกลบถาวร
-- [ ] 10.4 เพิ่ม restore button ใน trash item
-- [ ] 10.5 เชื่อม restore button กับ restore API
-- [ ] 10.6 เพิ่ม permanent delete button ใน trash item
-- [ ] 10.7 แสดง confirm dialog ก่อน permanent delete
-- [ ] 10.8 เชื่อม permanent delete button กับ permanent delete API
-- [ ] 10.9 แสดง empty trash state
-- [ ] 10.10 สร้าง job function `purge-trashed-notes`
-- [ ] 10.11 query notes ที่ `delete_after < now()`
-- [ ] 10.12 permanent delete notes ที่หมด retention
-- [ ] 10.13 บันทึก audit log จาก system job
-- [ ] 10.14 สร้าง protected route สำหรับ trigger purge job
-- [ ] 10.15 ทดสอบ purge job ด้วย note หมดอายุจำลอง
+- [x] 10.1 สร้างหน้า `/app/trash`
+- [x] 10.2 ดึง notes ที่ `status = trashed`
+- [x] 10.3 แสดงวันที่จะถูกลบถาวร
+- [x] 10.4 เพิ่ม restore button ใน trash item
+- [x] 10.5 เชื่อม restore button กับ restore API
+- [x] 10.6 เพิ่ม permanent delete button ใน trash item
+- [x] 10.7 แสดง confirm dialog ก่อน permanent delete
+- [x] 10.8 เชื่อม permanent delete button กับ permanent delete API
+- [x] 10.9 แสดง empty trash state
+- [x] 10.10 สร้าง job function `purge-trashed-notes`
+- [x] 10.11 query notes ที่ `delete_after < now()`
+- [x] 10.12 permanent delete notes ที่หมด retention
+- [x] 10.13 บันทึก audit log จาก system job
+- [x] 10.14 สร้าง protected route สำหรับ trigger purge job
+- [x] 10.15 ทดสอบ purge job ด้วย note หมดอายุจำลอง
 
 ## Phase 11: Sharing & Public Read Page
 
-- [ ] 11.1 สร้าง share repository function สำหรับ create share link
-- [ ] 11.2 สร้าง share repository function สำหรับ revoke share link
-- [ ] 11.3 สร้าง share repository function สำหรับ regenerate token
-- [ ] 11.4 สร้าง share repository function สำหรับ lookup by token hash
-- [ ] 11.5 สร้าง route handler `POST /api/notes/[noteId]/share`
-- [ ] 11.6 ตรวจ owner ก่อน create share link
-- [ ] 11.7 สร้าง raw token ที่เดายาก
-- [ ] 11.8 hash token ก่อนบันทึก database
-- [ ] 11.9 return public share URL เฉพาะตอน create/regenerate
-- [ ] 11.10 สร้าง route handler `DELETE /api/notes/[noteId]/share`
-- [ ] 11.11 set share link status เป็น `revoked`
-- [ ] 11.12 บันทึก audit log เมื่อ revoke
-- [ ] 11.13 สร้าง route handler `POST /api/notes/[noteId]/share/regenerate`
-- [ ] 11.14 revoke token เดิมเมื่อ regenerate
-- [ ] 11.15 สร้าง token ใหม่เมื่อ regenerate
-- [ ] 11.16 สร้างหน้า `/share/[token]`
-- [ ] 11.17 lookup share link ด้วย hash token
-- [ ] 11.18 return 404 ถ้า token invalid
-- [ ] 11.19 return 404 ถ้า share revoked
-- [ ] 11.20 return 404 ถ้า note เข้า trash
-- [ ] 11.21 render note แบบ read-only
-- [ ] 11.22 ใส่ meta robots `noindex,nofollow`
-- [ ] 11.23 ใส่ CSP header สำหรับ shared page
-- [ ] 11.24 sanitize content ก่อน render
-- [ ] 11.25 เพิ่ม theme toggle บน shared page
-- [ ] 11.26 ห้ามแสดง owner email บน shared page
-- [ ] 11.27 ห้ามส่ง internal user id ไป client
-- [ ] 11.28 สร้าง share button ใน editor
-- [ ] 11.29 สร้าง copy share link button
-- [ ] 11.30 สร้าง revoke share button
-- [ ] 11.31 สร้าง regenerate share link button
-- [ ] 11.32 ทดสอบ visitor อ่าน shared note ได้
-- [ ] 11.33 ทดสอบ revoke แล้ว link เข้าไม่ได้
-- [ ] 11.34 ทดสอบ note เข้า trash แล้ว link เข้าไม่ได้
-- [ ] 11.35 ทดสอบ XSS payload ไม่ execute
+- [x] 11.1 สร้าง share repository function สำหรับ create share link
+- [x] 11.2 สร้าง share repository function สำหรับ revoke share link
+- [x] 11.3 สร้าง share repository function สำหรับ regenerate token
+- [x] 11.4 สร้าง share repository function สำหรับ lookup by token hash
+- [x] 11.5 สร้าง route handler `POST /api/notes/[noteId]/share`
+- [x] 11.6 ตรวจ owner ก่อน create share link
+- [x] 11.7 สร้าง raw token ที่เดายาก
+- [x] 11.8 hash token ก่อนบันทึก database
+- [x] 11.9 return public share URL เฉพาะตอน create/regenerate
+- [x] 11.10 สร้าง route handler `DELETE /api/notes/[noteId]/share`
+- [x] 11.11 set share link status เป็น `revoked`
+- [x] 11.12 บันทึก audit log เมื่อ revoke
+- [x] 11.13 สร้าง route handler `POST /api/notes/[noteId]/share/regenerate`
+- [x] 11.14 revoke token เดิมเมื่อ regenerate
+- [x] 11.15 สร้าง token ใหม่เมื่อ regenerate
+- [x] 11.16 สร้างหน้า `/share/[token]`
+- [x] 11.17 lookup share link ด้วย hash token
+- [x] 11.18 return 404 ถ้า token invalid
+- [x] 11.19 return 404 ถ้า share revoked
+- [x] 11.20 return 404 ถ้า note เข้า trash
+- [x] 11.21 render note แบบ read-only
+- [x] 11.22 ใส่ meta robots `noindex,nofollow`
+- [x] 11.23 ใส่ CSP header สำหรับ shared page
+- [x] 11.24 sanitize content ก่อน render
+- [x] 11.25 เพิ่ม theme toggle บน shared page
+- [x] 11.26 ห้ามแสดง owner email บน shared page
+- [x] 11.27 ห้ามส่ง internal user id ไป client
+- [x] 11.28 สร้าง share button ใน editor
+- [x] 11.29 สร้าง copy share link button
+- [x] 11.30 สร้าง revoke share button
+- [x] 11.31 สร้าง regenerate share link button
+- [x] 11.32 ทดสอบ visitor อ่าน shared note ได้
+- [x] 11.33 ทดสอบ revoke แล้ว link เข้าไม่ได้
+- [x] 11.34 ทดสอบ note เข้า trash แล้ว link เข้าไม่ได้
+- [x] 11.35 ทดสอบ XSS payload ไม่ execute
 
 ## Phase 12: Markdown Export
 
-- [ ] 12.1 สร้าง export service สำหรับ Markdown
-- [ ] 12.2 สร้าง filename จาก note title แบบ safe
-- [ ] 12.3 sanitize content ก่อน export
-- [ ] 12.4 สร้าง route handler `GET /api/notes/[noteId]/export.md`
-- [ ] 12.5 ตรวจ owner ก่อน export
-- [ ] 12.6 ตั้ง response header `Content-Type: text/markdown`
-- [ ] 12.7 ตั้ง response header `Content-Disposition`
-- [ ] 12.8 บันทึก audit log เมื่อ export
-- [ ] 12.9 เพิ่ม export button ใน editor
-- [ ] 12.10 เชื่อม export button กับ export endpoint
-- [ ] 12.11 ทดสอบ export note ภาษาไทย
-- [ ] 12.12 ทดสอบ visitor export ไม่ได้
+- [x] 12.1 สร้าง export service สำหรับ Markdown
+- [x] 12.2 สร้าง filename จาก note title แบบ safe
+- [x] 12.3 sanitize content ก่อน export
+- [x] 12.4 สร้าง route handler `GET /api/notes/[noteId]/export`
+- [x] 12.5 ตรวจ owner ก่อน export
+- [x] 12.6 ตั้ง response header `Content-Type: text/markdown`
+- [x] 12.7 ตั้ง response header `Content-Disposition`
+- [x] 12.8 บันทึก audit log เมื่อ export
+- [x] 12.9 เพิ่ม export button ใน editor
+- [x] 12.10 เชื่อม export button กับ export endpoint
+- [x] 12.11 ทดสอบ export note ภาษาไทย
+- [x] 12.12 ทดสอบ visitor export ไม่ได้
 
 ## Phase 13: Billing & Subscription
 

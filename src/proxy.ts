@@ -4,6 +4,20 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/types/database";
 
 export async function proxy(request: NextRequest) {
+  if (request.nextUrl.pathname.startsWith("/share/")) {
+    const response = NextResponse.next({
+      request,
+    });
+
+    response.headers.set(
+      "Content-Security-Policy",
+      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' https: data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
+    );
+    response.headers.set("Cache-Control", "public, max-age=0, must-revalidate");
+    response.headers.set("X-Robots-Tag", "noindex, nofollow");
+    return response;
+  }
+
   let response = NextResponse.next({
     request,
   });
@@ -46,5 +60,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/app/:path*"],
+  matcher: ["/app/:path*", "/share/:path*"],
 };

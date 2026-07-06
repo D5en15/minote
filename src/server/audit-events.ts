@@ -7,6 +7,7 @@ export const AUDIT_EVENTS = {
   NOTE_DELETED: "note.deleted",
   NOTE_RESTORED: "note.restored",
   NOTE_EXPORTED: "note.exported",
+  GUEST_IMPORT_COMPLETED: "guest.import_completed",
   SHARE_CREATED: "share.created",
   SHARE_REVOKED: "share.revoked",
   SHARE_REGENERATED: "share.regenerated",

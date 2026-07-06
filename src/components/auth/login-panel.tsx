@@ -9,7 +9,11 @@ import { createBrowserClient } from "@/lib/supabase/browser";
 
 type RequestState = "idle" | "loading" | "success" | "error";
 
-export function LoginPanel() {
+type LoginPanelProps = {
+  guestNotesCount?: number;
+};
+
+export function LoginPanel({ guestNotesCount = 0 }: LoginPanelProps) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<RequestState>("idle");
   const [message, setMessage] = useState("");
@@ -115,6 +119,12 @@ export function LoginPanel() {
           role={state === "error" ? "alert" : "status"}
         >
           {message}
+        </p>
+      ) : null}
+
+      {guestNotesCount > 0 ? (
+        <p className="mt-3 text-sm text-muted-foreground">
+          {guestNotesCount} guest notes are waiting to be imported after sign-in.
         </p>
       ) : null}
     </div>
