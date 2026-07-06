@@ -114,14 +114,14 @@
 
 #### Features
 
-* ผู้ใช้ที่ยังไม่ลงชื่อเข้าใช้งานจะเห็นหน้า Landing Page แนะนำฟีเจอร์การจดโน้ต (Website Introduction)
-* แสดงปุ่มสลับการทำงาน Theme โหมดสว่าง/มืด (Light/Dark Theme Switcher) บนหน้าแรกสุด
-* นำระบบ Local draft storage editor และระบบแจ้งเตือนข้อความนำเข้า "Import guest notes?" ออกจากแอปพลิเคชันอย่างปลอดภัย
+* ผู้ใช้ที่ยังไม่ลงชื่อเข้าใช้งานจะเห็นหน้า Landing Page สไตล์ Hero Section ตรงกลางที่ดูเรียบหรูและพรีเมียม
+* นำเสนอข้อมูลสำคัญ ได้แก่ ฟีเจอร์การใช้งาน (Features), แผนการให้บริการ (Pricing cards) และข้อมูลลิขสิทธิ์
+* แสดงปุ่มสลับการทำงาน Theme โหมดสว่าง/มืด (Light/Dark Theme Switcher) ในส่วน Header และปุ่ม Call to Action สำหรับเปิดใช้งาน Login Panel ผ่าน Popup modal
 
 #### Business Logic & Edge Cases
 
-* หน้า Landing Page ดำเนินงานแบบ Static content แนะนำฟีเจอร์เด่น
-* การล็อกอินของสมาชิกจะนำเข้าสู่ Cloud Workspace หลักทันทีโดยไม่มีการเรียกแจ้งเตือน Banner นำเข้าประวัติบันทึกเดิมอีกต่อไปเพื่อความสะอาดเรียบร้อยของหน้าตาแอปพลิเคชัน
+* หน้า Landing Page ดำเนินงานแบบ Centered static content พร้อมระบบ Interactive smooth scrolling ไปยังส่วนข้อมูลและราคา
+* ปุ่ม Get Started และการเข้าถึงระบบจากหน้าแรกจะเรียกแสดงผล Login/Register Panel ภายใน Dialog Popup Modal ครบวงจร
 
 ### 3.3 Notes Module
 
