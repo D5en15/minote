@@ -427,20 +427,20 @@
 
 ## Phase 14: Settings, Account Deletion & Data Export Foundation
 
-- [ ] 14.1 สร้างหน้า `/app/settings`
-- [ ] 14.2 แสดง profile email
-- [ ] 14.3 แสดง display name
-- [ ] 14.4 เพิ่มฟอร์มแก้ display name
-- [ ] 14.5 สร้าง route handler สำหรับ update profile
-- [ ] 14.6 บันทึก audit log เมื่อ update profile
-- [ ] 14.7 เพิ่ม section data export policy
-- [ ] 14.8 เพิ่ม section account deletion
-- [ ] 14.9 สร้าง route handler `POST /api/account/delete-request`
-- [ ] 14.10 mark `profiles.deleted_at` เมื่อ request deletion
-- [ ] 14.11 revoke share links ทั้งหมดเมื่อ request deletion
-- [ ] 14.12 บันทึก audit log เมื่อ request deletion
-- [ ] 14.13 แสดง confirmation dialog ก่อน request deletion
-- [ ] 14.14 ทดสอบ request deletion แล้ว shared links เข้าไม่ได้
+- [x] 14.1 สร้างหน้า `/app/settings`
+- [x] 14.2 แสดง profile email
+- [x] 14.3 แสดง display name
+- [x] 14.4 เพิ่มฟอร์มแก้ display name
+- [x] 14.5 สร้าง route handler สำหรับ update profile
+- [x] 14.6 บันทึก audit log เมื่อ update profile
+- [x] 14.7 เพิ่ม section data export policy
+- [x] 14.8 เพิ่ม section account deletion
+- [x] 14.9 สร้าง route handler `POST /api/account/delete-request`
+- [x] 14.10 mark `profiles.deleted_at` เมื่อ request deletion
+- [x] 14.11 revoke share links ทั้งหมดเมื่อ request deletion
+- [x] 14.12 บันทึก audit log เมื่อ request deletion
+- [x] 14.13 แสดง confirmation dialog ก่อน request deletion
+- [x] 14.14 ทดสอบ request deletion แล้ว shared links เข้าไม่ได้
 
 ## Phase 15: Admin & Audit
 

@@ -13,6 +13,8 @@ export const AUDIT_EVENTS = {
   SHARE_REGENERATED: "share.regenerated",
   BILLING_WEBHOOK_RECEIVED: "billing.webhook_received",
   BILLING_SUBSCRIPTION_UPDATED: "billing.subscription_updated",
+  PROFILE_UPDATED: "profile.updated",
+  ACCOUNT_DELETION_REQUESTED: "account.deletion_requested",
 } as const;
 
 export type AuditEventType =
