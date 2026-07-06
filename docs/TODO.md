@@ -521,13 +521,13 @@
 
 ## Phase 19: Documentation & Handoff
 
-- [ ] 19.1 อัปเดต README วิธี setup local development
-- [ ] 19.2 อัปเดต README env variables ทั้งหมด
-- [ ] 19.3 เขียนวิธีรัน Supabase migrations
-- [ ] 19.4 เขียนวิธีตั้งค่า Supabase Auth
-- [ ] 19.5 เขียนวิธีตั้งค่า Stripe test mode
-- [ ] 19.6 เขียนวิธีตั้งค่า Stripe webhook local
-- [ ] 19.7 เขียนวิธี deploy ไป production
-- [ ] 19.8 เขียน operational runbook สำหรับ failed webhook
-- [ ] 19.9 เขียน operational runbook สำหรับ purge trash job
-- [ ] 19.10 อัปเดต `CONTEXT.md` หลัง MVP foundation พร้อมเริ่ม feature development
+- [x] 19.1 อัปเดต README วิธี setup local development
+- [x] 19.2 อัปเดต README env variables ทั้งหมด
+- [x] 19.3 เขียนวิธีรัน Supabase migrations
+- [x] 19.4 เขียนวิธีตั้งค่า Supabase Auth
+- [x] 19.5 เขียนวิธีตั้งค่า Stripe test mode
+- [x] 19.6 เขียนวิธีตั้งค่า Stripe webhook local
+- [x] 19.7 เขียนวิธี deploy ไป production
+- [x] 19.8 เขียน operational runbook สำหรับ failed webhook
+- [x] 19.9 เขียน operational runbook สำหรับ purge trash job
+- [x] 19.10 อัปเดต `CONTEXT.md` หลัง MVP foundation พร้อมเริ่ม feature development
