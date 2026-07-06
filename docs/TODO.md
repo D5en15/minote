@@ -390,40 +390,40 @@
 
 ## Phase 13: Billing & Subscription
 
-- [ ] 13.1 สร้าง Stripe client helper
-- [ ] 13.2 สร้าง billing service อ่าน current subscription
-- [ ] 13.3 สร้าง entitlement service จาก plan/subscription
-- [ ] 13.4 สร้าง route handler `GET /api/billing/status`
-- [ ] 13.5 สร้าง route handler `POST /api/billing/checkout`
-- [ ] 13.6 ตรวจ authenticated user ก่อน checkout
-- [ ] 13.7 สร้าง Stripe customer หาก user ยังไม่มี
-- [ ] 13.8 map user id กับ Stripe customer metadata
-- [ ] 13.9 สร้าง Stripe Checkout session สำหรับ Premium Monthly
-- [ ] 13.10 สร้าง Stripe Checkout session สำหรับ Premium Yearly
-- [ ] 13.11 สร้าง route handler `POST /api/billing/portal`
-- [ ] 13.12 สร้าง Stripe Customer Portal session
-- [ ] 13.13 สร้าง route handler `POST /api/webhooks/stripe`
-- [ ] 13.14 verify Stripe webhook signature
-- [ ] 13.15 บันทึก event id ลง `stripe_events`
-- [ ] 13.16 ignore duplicate Stripe event id
-- [ ] 13.17 handle event `checkout.session.completed`
-- [ ] 13.18 handle event `customer.subscription.created`
-- [ ] 13.19 handle event `customer.subscription.updated`
-- [ ] 13.20 handle event `customer.subscription.deleted`
-- [ ] 13.21 handle event `invoice.payment_failed`
-- [ ] 13.22 update `subscriptions.status` แบบ idempotent
-- [ ] 13.23 set `grace_until` เมื่อ payment failed หรือ past due
-- [ ] 13.24 บันทึก audit log เมื่อ webhook update subscription
-- [ ] 13.25 สร้างหน้า `/app/billing`
-- [ ] 13.26 แสดง current plan
-- [ ] 13.27 แสดง subscription status
-- [ ] 13.28 เพิ่มปุ่ม upgrade monthly
-- [ ] 13.29 เพิ่มปุ่ม upgrade yearly
-- [ ] 13.30 เพิ่มปุ่ม manage billing
-- [ ] 13.31 lock premium-only UI เมื่อ user เป็น Free
-- [ ] 13.32 ทดสอบ checkout flow ด้วย Stripe test mode
-- [ ] 13.33 ทดสอบ webhook duplicate event
-- [ ] 13.34 ทดสอบ downgrade แล้ว notes หลักยังเข้าถึงได้
+- [x] 13.1 สร้าง Stripe client helper
+- [x] 13.2 สร้าง billing service อ่าน current subscription
+- [x] 13.3 สร้าง entitlement service จาก plan/subscription
+- [x] 13.4 สร้าง route handler `GET /api/billing/status`
+- [x] 13.5 สร้าง route handler `POST /api/billing/checkout`
+- [x] 13.6 ตรวจ authenticated user ก่อน checkout
+- [x] 13.7 สร้าง Stripe customer หาก user ยังไม่มี
+- [x] 13.8 map user id กับ Stripe customer metadata
+- [x] 13.9 สร้าง Stripe Checkout session สำหรับ Premium Monthly
+- [x] 13.10 สร้าง Stripe Checkout session สำหรับ Premium Yearly
+- [x] 13.11 สร้าง route handler `POST /api/billing/portal`
+- [x] 13.12 สร้าง Stripe Customer Portal session
+- [x] 13.13 สร้าง route handler `POST /api/webhooks/stripe`
+- [x] 13.14 verify Stripe webhook signature
+- [x] 13.15 บันทึก event id ลง `stripe_events`
+- [x] 13.16 ignore duplicate Stripe event id
+- [x] 13.17 handle event `checkout.session.completed`
+- [x] 13.18 handle event `customer.subscription.created`
+- [x] 13.19 handle event `customer.subscription.updated`
+- [x] 13.20 handle event `customer.subscription.deleted`
+- [x] 13.21 handle event `invoice.payment_failed`
+- [x] 13.22 update `subscriptions.status` แบบ idempotent
+- [x] 13.23 set `grace_until` เมื่อ payment failed หรือ past due
+- [x] 13.24 บันทึก audit log เมื่อ webhook update subscription
+- [x] 13.25 สร้างหน้า `/app/billing`
+- [x] 13.26 แสดง current plan
+- [x] 13.27 แสดง subscription status
+- [x] 13.28 เพิ่มปุ่ม upgrade monthly
+- [x] 13.29 เพิ่มปุ่ม upgrade yearly
+- [x] 13.30 เพิ่มปุ่ม manage billing
+- [x] 13.31 lock premium-only UI เมื่อ user เป็น Free
+- [x] 13.32 ทดสอบ checkout flow ด้วย Stripe test mode
+- [x] 13.33 ทดสอบ webhook duplicate event
+- [x] 13.34 ทดสอบ downgrade แล้ว notes หลักยังเข้าถึงได้
 
 ## Phase 14: Settings, Account Deletion & Data Export Foundation
 
