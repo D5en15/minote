@@ -9,7 +9,8 @@ import {
   Lock,
   Zap,
   ArrowRight,
-  CheckCircle,
+  Check,
+  Minus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,77 @@ import {
 } from "@/components/ui/dialog";
 
 type ThemePreference = "light" | "dark";
+type BillingCycle = "monthly" | "yearly";
+
+const MONTHLY_PRICE_IDS = {
+  pro: "price_premium_monthly",
+  studio: "price_studio_monthly",
+} as const;
+
+const YEARLY_PRICE_IDS = {
+  pro: "price_premium_yearly",
+  studio: "price_studio_yearly",
+} as const;
+
+const PRICING_ROWS = [
+  {
+    feature: "Daily Note Creation Limits",
+    free: "3 notes/day",
+    pro: "Unlimited",
+    studio: "Unlimited",
+  },
+  {
+    feature: "Total Note Cloud Storage",
+    free: "Max 50 notes",
+    pro: "Unlimited",
+    studio: "Unlimited",
+  },
+  {
+    feature: "Shared Page Typographies",
+    free: "Poppins only",
+    pro: "Lora Serif Option",
+    studio: "Lora Serif Option",
+  },
+  {
+    feature: "Minote Branding Watermark",
+    free: "Included",
+    pro: "Included",
+    studio: "Whitelabel / Removed",
+  },
+  {
+    feature: "Advanced Link Security",
+    free: "No",
+    pro: "No",
+    studio: "Yes / Password-protected",
+  },
+] as const;
+
+const PLAN_META = {
+  free: {
+    name: "Zen Free",
+    monthlyLabel: "$0",
+    monthlySubtext: "Forever free",
+    yearlyLabel: "$0",
+    yearlySubtext: "Forever free",
+    badge: null,
+  },
+  pro: {
+    name: "Zen Pro",
+    monthlyLabel: "$4.99/mo",
+    monthlySubtext: "For creators and writers",
+    yearlyLabel: "$47.88/yr",
+    yearlySubtext: "$3.99/mo billed yearly",
+    badge: "Popular",
+  },
+  studio: {
+    name: "Zen Studio",
+    monthlyLabel: "$11.99/mo",
+    monthlySubtext: "For brands and power users",
+    yearlyLabel: "$115.08/yr",
+    yearlySubtext: "$9.59/mo billed yearly",
+    badge: "Whitelabel",
+  },
+} as const;
 
 function getPreferredTheme(): ThemePreference {
   if (typeof window === "undefined") {
@@ -38,13 +110,12 @@ function getPreferredTheme(): ThemePreference {
 }
 
 export function GuestWorkspace() {
-  const [theme, setTheme] = useState<ThemePreference>("light");
+  const [theme, setTheme] = useState<ThemePreference>(getPreferredTheme);
+  const [billingCycle, setBillingCycle] = useState<BillingCycle>("monthly");
 
   useEffect(() => {
-    const initialTheme = getPreferredTheme();
-    setTheme(initialTheme);
-    document.documentElement.classList.toggle("dark", initialTheme === "dark");
-  }, []);
+    document.documentElement.classList.toggle("dark", theme === "dark");
+  }, [theme]);
 
   function toggleTheme() {
     const nextTheme = theme === "dark" ? "light" : "dark";
@@ -58,6 +129,33 @@ export function GuestWorkspace() {
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
+  }
+
+  function getCheckoutPriceId(plan: "pro" | "studio") {
+    return billingCycle === "yearly"
+      ? YEARLY_PRICE_IDS[plan]
+      : MONTHLY_PRICE_IDS[plan];
+  }
+
+  function renderMatrixValue(value: string) {
+    const isPositiveValue =
+      value === "Unlimited" ||
+      value.startsWith("Yes") ||
+      value.includes("Option") ||
+      value.includes("Removed") ||
+      value.includes("Included") ||
+      value === "Forever free";
+
+    return (
+      <span className="inline-flex items-center gap-2">
+        {isPositiveValue ? (
+          <Check className="size-4 text-emerald-500" aria-hidden="true" />
+        ) : (
+          <Minus className="size-4 text-muted-foreground" aria-hidden="true" />
+        )}
+        <span>{value}</span>
+      </span>
+    );
   }
 
   return (
@@ -189,7 +287,7 @@ export function GuestWorkspace() {
         </div>
       </section>
 
-      {/* Pricing Cards Section */}
+      {/* Pricing Matrix Section */}
       <section id="pricing" className="w-full border-t border-border py-20">
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10 space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -197,102 +295,190 @@ export function GuestWorkspace() {
               Simple, transparent pricing.
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Start capturing your thoughts today for free, or upgrade anytime for full premium options.
+              Compare every plan side by side, then choose the billing cycle that fits your pace.
             </p>
           </div>
 
-          <div className="grid gap-8 max-w-4xl mx-auto md:grid-cols-2">
-            {/* Free Plan */}
-            <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-8 shadow-sm">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-2xl font-bold font-sans">Free Plan</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">Capture basic ideas and test the waters.</p>
-                </div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold font-sans">$0</span>
-                  <span className="text-muted-foreground">/ month</span>
-                </div>
-                <ul className="space-y-3 text-sm text-muted-foreground border-t border-border pt-6">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="size-4 text-primary" />
-                    Up to 50 active notes limit
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="size-4 text-primary" />
-                    Up to 10 active tags
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="size-4 text-primary" />
-                    Standard markdown exports
-                  </li>
-                </ul>
-              </div>
-              <Dialog>
-                <DialogTrigger render={
-                  <Button variant="outline" className="mt-8 w-full py-6 rounded-lg cursor-pointer font-semibold">
-                    Get started
-                  </Button>
-                } />
-                <DialogContent className="sm:max-w-[420px]">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold font-sans text-center mb-2">Login or register</DialogTitle>
-                  </DialogHeader>
-                  <div className="p-1">
-                    <LoginPanel guestNotesCount={0} />
-                  </div>
-                </DialogContent>
-              </Dialog>
+          <div className="mx-auto flex max-w-md items-center justify-center">
+            <div className="inline-flex rounded-full border border-border bg-muted/40 p-1">
+              <button
+                className={[
+                  "rounded-full px-4 py-2 text-sm font-medium transition-all",
+                  billingCycle === "monthly"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground",
+                ].join(" ")}
+                onClick={() => setBillingCycle("monthly")}
+                type="button"
+              >
+                Monthly
+              </button>
+              <button
+                className={[
+                  "rounded-full px-4 py-2 text-sm font-medium transition-all",
+                  billingCycle === "yearly"
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground",
+                ].join(" ")}
+                onClick={() => setBillingCycle("yearly")}
+                type="button"
+              >
+                Yearly <span className="text-emerald-600 dark:text-emerald-400">(Save 20%)</span>
+              </button>
             </div>
+          </div>
 
-            {/* Pro Plan */}
-            <div className="flex flex-col justify-between rounded-lg border-2 border-primary bg-card p-8 shadow-md relative">
-              <div className="absolute top-0 right-6 -translate-y-1/2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
-                Popular
+          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+            <div className="grid min-w-[880px] grid-cols-[1.45fr_repeat(3,minmax(0,1fr))]">
+              <div className="border-b border-border bg-muted/30 px-6 py-5">
+                <p className="text-sm font-medium text-muted-foreground">
+                  Feature comparison
+                </p>
               </div>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-2xl font-bold font-sans">Pro Plan</h3>
-                  <p className="mt-2 text-sm text-muted-foreground">For creators and heavy writers who need sync and sharing.</p>
-                </div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold font-sans">$8</span>
-                  <span className="text-muted-foreground">/ month</span>
-                </div>
-                <ul className="space-y-3 text-sm text-muted-foreground border-t border-border pt-6">
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="size-4 text-primary" />
-                    Unlimited cloud notes
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="size-4 text-primary" />
-                    Unlimited custom tags
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="size-4 text-primary" />
-                    Public read-only sharing links
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <CheckCircle className="size-4 text-primary" />
-                    Secure revision history backups
-                  </li>
-                </ul>
-              </div>
-              <Dialog>
-                <DialogTrigger render={
-                  <Button className="mt-8 w-full py-6 rounded-lg cursor-pointer font-semibold">
-                    Upgrade now
-                  </Button>
-                } />
-                <DialogContent className="sm:max-w-[420px]">
-                  <DialogHeader>
-                    <DialogTitle className="text-2xl font-bold font-sans text-center mb-2">Login or register</DialogTitle>
-                  </DialogHeader>
-                  <div className="p-1">
-                    <LoginPanel guestNotesCount={0} />
+
+              {(["free", "pro", "studio"] as const).map((planKey) => {
+                const plan = PLAN_META[planKey];
+                const priceLabel =
+                  billingCycle === "yearly" ? plan.yearlyLabel : plan.monthlyLabel;
+                const priceSubtext =
+                  billingCycle === "yearly"
+                    ? plan.yearlySubtext
+                    : plan.monthlySubtext;
+
+                return (
+                  <div
+                    className={[
+                      "border-b border-l border-border px-6 py-5",
+                      planKey === "pro" ? "bg-primary/5" : "bg-card",
+                    ].join(" ")}
+                    key={planKey}
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-lg font-semibold">{plan.name}</h3>
+                        {plan.badge ? (
+                          <span
+                            className={[
+                              "rounded-full px-2 py-0.5 text-[11px] font-semibold",
+                              planKey === "pro"
+                                ? "bg-primary text-primary-foreground"
+                                : "bg-foreground text-background",
+                            ].join(" ")}
+                          >
+                            {plan.badge}
+                          </span>
+                        ) : null}
+                      </div>
+                      <div>
+                        <p className="text-2xl font-semibold tracking-tight">
+                          {priceLabel}
+                        </p>
+                        <p className="mt-1 text-sm text-muted-foreground">
+                          {priceSubtext}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                </DialogContent>
-              </Dialog>
+                );
+              })}
+
+              {PRICING_ROWS.map((row) => (
+                <div className="contents" key={row.feature}>
+                  <div className="border-b border-border px-6 py-4 text-sm font-medium">
+                    {row.feature}
+                  </div>
+                  <div className="border-b border-l border-border px-6 py-4 text-sm text-muted-foreground">
+                    {renderMatrixValue(row.free)}
+                  </div>
+                  <div className="border-b border-l border-border bg-primary/5 px-6 py-4 text-sm text-muted-foreground">
+                    {renderMatrixValue(row.pro)}
+                  </div>
+                  <div className="border-b border-l border-border px-6 py-4 text-sm text-muted-foreground">
+                    {renderMatrixValue(row.studio)}
+                  </div>
+                </div>
+              ))}
+
+              <div className="px-6 py-5 text-sm text-muted-foreground">
+                Choose your plan
+              </div>
+              <div className="border-l border-border px-6 py-5">
+                <Dialog>
+                  <DialogTrigger
+                    render={
+                      <Button
+                        className="w-full"
+                        type="button"
+                        variant="outline"
+                      >
+                        Get Started
+                      </Button>
+                    }
+                  />
+                  <DialogContent className="sm:max-w-[420px]">
+                    <DialogHeader>
+                      <DialogTitle className="text-center text-2xl font-bold font-sans mb-2">
+                        Login or register
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="p-1">
+                      <LoginPanel guestNotesCount={0} />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <div className="border-l border-border bg-primary/5 px-6 py-5">
+                <Dialog>
+                  <DialogTrigger
+                    render={
+                      <Button className="w-full" type="button">
+                        {billingCycle === "yearly"
+                          ? "Choose Pro Yearly"
+                          : "Choose Pro Monthly"}
+                      </Button>
+                    }
+                  />
+                  <DialogContent className="sm:max-w-[420px]">
+                    <DialogHeader>
+                      <DialogTitle className="text-center text-2xl font-bold font-sans mb-2">
+                        Login or register
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="p-1">
+                      <LoginPanel
+                        checkoutPriceId={getCheckoutPriceId("pro")}
+                        guestNotesCount={0}
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <div className="border-l border-border px-6 py-5">
+                <Dialog>
+                  <DialogTrigger
+                    render={
+                      <Button className="w-full" type="button" variant="outline">
+                        {billingCycle === "yearly"
+                          ? "Choose Studio Yearly"
+                          : "Choose Studio Monthly"}
+                      </Button>
+                    }
+                  />
+                  <DialogContent className="sm:max-w-[420px]">
+                    <DialogHeader>
+                      <DialogTitle className="text-center text-2xl font-bold font-sans mb-2">
+                        Login or register
+                      </DialogTitle>
+                    </DialogHeader>
+                    <div className="p-1">
+                      <LoginPanel
+                        checkoutPriceId={getCheckoutPriceId("studio")}
+                        guestNotesCount={0}
+                      />
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
             </div>
           </div>
         </div>

@@ -10,18 +10,41 @@ import { createBrowserClient } from "@/lib/supabase/browser";
 type RequestState = "idle" | "loading" | "success" | "error";
 
 type LoginPanelProps = {
+  checkoutPriceId?: string | null;
   guestNotesCount?: number;
 };
 
-export function LoginPanel({ guestNotesCount = 0 }: LoginPanelProps) {
+const INTENDED_CHECKOUT_STORAGE_KEY = "minote-intended-checkout-price-id";
+
+export function LoginPanel({
+  checkoutPriceId = null,
+  guestNotesCount = 0,
+}: LoginPanelProps) {
   const [email, setEmail] = useState("");
   const [state, setState] = useState<RequestState>("idle");
   const [message, setMessage] = useState("");
+
+  function persistIntendedCheckout() {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (checkoutPriceId) {
+      window.localStorage.setItem(
+        INTENDED_CHECKOUT_STORAGE_KEY,
+        checkoutPriceId
+      );
+      return;
+    }
+
+    window.localStorage.removeItem(INTENDED_CHECKOUT_STORAGE_KEY);
+  }
 
   async function requestMagicLink(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setState("loading");
     setMessage("");
+    persistIntendedCheckout();
 
     const response = await fetch("/api/auth/magic-link", {
       method: "POST",
@@ -49,6 +72,7 @@ export function LoginPanel({ guestNotesCount = 0 }: LoginPanelProps) {
   async function signInWithGoogle() {
     setState("loading");
     setMessage("");
+    persistIntendedCheckout();
 
     const supabase = createBrowserClient();
     const { error } = await supabase.auth.signInWithOAuth({

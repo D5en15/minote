@@ -30,6 +30,7 @@ export default function BillingClientPage() {
   const [billing, setBilling] = useState<BillingStatus | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isYearly, setIsYearly] = useState(false);
   const [checkoutPending, startCheckout] = useTransition();
   const [portalPending, startPortal] = useTransition();
 
@@ -111,6 +112,38 @@ export default function BillingClientPage() {
       year: "numeric",
     }).format(new Date(isoString));
   }
+
+  const proPrice = isYearly
+    ? {
+        amount: "$47.88",
+        cadence: "/ year",
+        detail: "$3.99/mo billed yearly",
+        buttonLabel: "Upgrade Pro Yearly",
+        priceId: "price_premium_yearly",
+      }
+    : {
+        amount: "$4.99",
+        cadence: "/ month",
+        detail: "Unlimited notes, tags, and Lora typography",
+        buttonLabel: "Upgrade Pro Monthly",
+        priceId: "price_premium_monthly",
+      };
+
+  const studioPrice = isYearly
+    ? {
+        amount: "$115.08",
+        cadence: "/ year",
+        detail: "$9.59/mo billed yearly",
+        buttonLabel: "Upgrade Studio Yearly",
+        priceId: "price_studio_yearly",
+      }
+    : {
+        amount: "$11.99",
+        cadence: "/ month",
+        detail: "Whitelabel sharing and metadata controls",
+        buttonLabel: "Upgrade Studio Monthly",
+        priceId: "price_studio_monthly",
+      };
 
   if (loading) {
     return (
@@ -219,6 +252,36 @@ export default function BillingClientPage() {
             <p className="text-sm text-muted-foreground">Unlock unlimited potential with our clean writing environment workspace.</p>
           </div>
 
+          <div className="flex justify-center">
+            <div className="inline-flex rounded-full border border-border bg-muted/60 p-1 shadow-sm">
+              <button
+                type="button"
+                aria-pressed={!isYearly}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                  !isYearly
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setIsYearly(false)}
+              >
+                Monthly
+              </button>
+              <button
+                type="button"
+                aria-pressed={isYearly}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                  isYearly
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+                onClick={() => setIsYearly(true)}
+              >
+                Yearly
+                <span className="ml-2 text-xs text-emerald-600 dark:text-emerald-400">Save 20%</span>
+              </button>
+            </div>
+          </div>
+
           <div className="grid gap-6 md:grid-cols-2">
             {/* Zen Pro Plan Card */}
             <div className="flex flex-col justify-between rounded-lg border-2 border-border bg-card p-6 shadow-sm">
@@ -232,41 +295,23 @@ export default function BillingClientPage() {
                 <p className="mt-2 text-sm text-muted-foreground">
                   For creators, freelancers, and writers who need unlimited notes, tags, and custom serif typography (Lora).
                 </p>
-                
-                {/* Price selector monthly / yearly */}
-                <div className="mt-6 space-y-4">
+
+                <div className="mt-6">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold font-sans">$4.99</span>
-                    <span className="text-sm text-muted-foreground">/ month</span>
+                    <span className="text-3xl font-extrabold font-sans">{proPrice.amount}</span>
+                    <span className="text-sm text-muted-foreground">{proPrice.cadence}</span>
                   </div>
+                  <p className="mt-2 text-sm text-muted-foreground">{proPrice.detail}</p>
                   <Button
-                    className="w-full font-semibold"
+                    className="mt-4 w-full font-semibold"
                     disabled={checkoutPending}
-                    onClick={() => handleCheckout("price_premium_monthly")}
+                    onClick={() => handleCheckout(proPrice.priceId)}
                   >
                     {checkoutPending ? (
                       <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
                     ) : null}
-                    Upgrade Pro Monthly
+                    {proPrice.buttonLabel}
                   </Button>
-
-                  <div className="border-t border-border pt-4">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold font-sans">$47.88</span>
-                      <span className="text-sm text-muted-foreground">/ year</span>
-                    </div>
-                    <Button
-                      variant="outline"
-                      className="mt-2 w-full font-semibold"
-                      disabled={checkoutPending}
-                      onClick={() => handleCheckout("price_premium_yearly")}
-                    >
-                      {checkoutPending ? (
-                        <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
-                      ) : null}
-                      Upgrade Pro Yearly
-                    </Button>
-                  </div>
                 </div>
 
                 <ul className="mt-6 space-y-3 text-sm text-muted-foreground border-t border-border pt-4">
@@ -303,40 +348,22 @@ export default function BillingClientPage() {
                   For professional writers and personal brands. Completely remove Minote branding and customize shared metadata.
                 </p>
 
-                {/* Price selector monthly / yearly */}
-                <div className="mt-6 space-y-4">
+                <div className="mt-6">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-extrabold font-sans">$11.99</span>
-                    <span className="text-sm text-muted-foreground">/ month</span>
+                    <span className="text-3xl font-extrabold font-sans">{studioPrice.amount}</span>
+                    <span className="text-sm text-muted-foreground">{studioPrice.cadence}</span>
                   </div>
+                  <p className="mt-2 text-sm text-muted-foreground">{studioPrice.detail}</p>
                   <Button
-                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold"
+                    className="mt-4 w-full bg-purple-600 text-white font-semibold hover:bg-purple-700"
                     disabled={checkoutPending}
-                    onClick={() => handleCheckout("price_studio_monthly")}
+                    onClick={() => handleCheckout(studioPrice.priceId)}
                   >
                     {checkoutPending ? (
                       <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
                     ) : null}
-                    Upgrade Studio Monthly
+                    {studioPrice.buttonLabel}
                   </Button>
-
-                  <div className="border-t border-border pt-4">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-extrabold font-sans">$115.08</span>
-                      <span className="text-sm text-muted-foreground">/ year</span>
-                    </div>
-                    <Button
-                      variant="outline"
-                      className="mt-2 w-full border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/10 font-semibold"
-                      disabled={checkoutPending}
-                      onClick={() => handleCheckout("price_studio_yearly")}
-                    >
-                      {checkoutPending ? (
-                        <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
-                      ) : null}
-                      Upgrade Studio Yearly
-                    </Button>
-                  </div>
                 </div>
 
                 <ul className="mt-6 space-y-3 text-sm text-muted-foreground border-t border-border pt-4">

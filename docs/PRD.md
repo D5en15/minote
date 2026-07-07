@@ -117,11 +117,13 @@
 * ผู้ใช้ที่ยังไม่ลงชื่อเข้าใช้งานจะเห็นหน้า Landing Page สไตล์ Hero Section ตรงกลางที่ดูเรียบหรูและพรีเมียม
 * นำเสนอข้อมูลสำคัญ ได้แก่ ฟีเจอร์การใช้งาน (Features), แผนการให้บริการ (Pricing cards) และข้อมูลลิขสิทธิ์
 * แสดงปุ่มสลับการทำงาน Theme โหมดสว่าง/มืด (Light/Dark Theme Switcher) ในส่วน Header และปุ่ม Call to Action สำหรับเปิดใช้งาน Login Panel ผ่าน Popup modal
+* ส่วน Pricing บนหน้า public ต้องรองรับ comparison matrix 3 แผน (Zen Free, Zen Pro, Zen Studio) พร้อม toggle สลับ Monthly / Yearly และ CTA ของแต่ละแผน
 
 #### Business Logic & Edge Cases
 
 * หน้า Landing Page ดำเนินงานแบบ Centered static content พร้อมระบบ Interactive smooth scrolling ไปยังส่วนข้อมูลและราคา
 * ปุ่ม Get Started และการเข้าถึงระบบจากหน้าแรกจะเรียกแสดงผล Login/Register Panel ภายใน Dialog Popup Modal ครบวงจร
+* CTA ของแผน paid บนหน้า public ต้องส่ง intended Stripe price variant ตาม billing cycle ที่ผู้ใช้เลือกไว้ก่อนเริ่ม auth flow
 
 ### 3.3 Notes Module
 
@@ -234,6 +236,7 @@
 * Zen Studio Plan ($11.99/mo หรือ $115.08/yr): ปลดล็อก Whitelabel ลบลายน้ำออกจากหน้าแชร์, ตั้งค่า metadata visibility ได้
 * Stripe Checkout & Customer Portal
 * Stripe Webhook สำหรับซิงก์ข้อมูลสถานะ active, trialing, past_due, canceled, expired, unpaid, payment_failed, refunded
+* หน้า public pricing และหน้า `/app/billing` ต้องรองรับ toggle สลับ Monthly / Yearly โดย CTA และปุ่ม upgrade ต้องชี้ Stripe price variant ให้ตรงกับรอบบิลที่ผู้ใช้เลือก
 
 #### Business Logic & Edge Cases
 
