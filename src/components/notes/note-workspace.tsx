@@ -46,12 +46,22 @@ type NotesListResponse = {
   data?: {
     notes: NoteWithTags[];
   };
+  error?: {
+    code?: string;
+    message?: string;
+    details?: unknown;
+  };
 };
 
 type NoteResponse = {
   ok: boolean;
   data?: {
     note: NoteWithTags;
+  };
+  error?: {
+    code?: string;
+    message?: string;
+    details?: unknown;
   };
 };
 
@@ -165,6 +175,24 @@ function SaveIndicator({
   return <p className="text-sm text-muted-foreground">Ready</p>;
 }
 
+function getApiErrorMessage(payload: {
+  error?: { code?: string; message?: string; details?: unknown };
+}) {
+  if (!payload.error) {
+    return "Something went wrong. Please try again.";
+  }
+
+  if (payload.error.code === "QUOTA_EXCEEDED") {
+    return "You reached your current plan limit. Delete old notes or upgrade your plan.";
+  }
+
+  if (payload.error.code === "UNAUTHORIZED") {
+    return "Your session expired. Please sign in again.";
+  }
+
+  return payload.error.message || "Something went wrong. Please try again.";
+}
+
 type NoteEditorPanelProps = {
   availableTags: Tag[];
   deleteLoading: boolean;
@@ -195,6 +223,7 @@ function NoteEditorPanel({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [shareLoading, setShareLoading] = useState(false);
   const [shareError, setShareError] = useState("");
+  const [editorError, setEditorError] = useState("");
   const [shareSettings, setShareSettings] = useState<ShareSettingsDraft>({
     fontFamily: note.activeShareLink?.fontFamily ?? "poppins",
     showBranding: note.activeShareLink?.showBranding ?? true,
@@ -213,8 +242,10 @@ function NoteEditorPanel({
     onSaved: (savedNote) => {
       setTitleDraft(savedNote.title);
       setContentDraft(savedNote.content_markdown);
+      setEditorError("");
       onSavedNote(savedNote);
     },
+    onError: setEditorError,
   });
 
   const suggestedTags = availableTags.filter(
@@ -478,6 +509,11 @@ function NoteEditorPanel({
       </div>
       <div className="flex-1 p-4">
         <div className="mx-auto flex h-full max-w-4xl flex-col gap-4">
+          {editorError ? (
+            <div className="rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+              {editorError}
+            </div>
+          ) : null}
           <Input
             className="h-11 border-transparent px-0 text-2xl font-semibold shadow-none focus-visible:border-transparent focus-visible:ring-0"
             onChange={(event) => setTitleDraft(event.target.value)}
@@ -816,6 +852,7 @@ export function NoteWorkspace({
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [createLoading, setCreateLoading] = useState(false);
   const [shareUrlsByNoteId, setShareUrlsByNoteId] = useState<Record<string, string>>({});
+  const [workspaceError, setWorkspaceError] = useState("");
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -848,6 +885,7 @@ export function NoteWorkspace({
         return;
       }
 
+      setWorkspaceError(payload.ok ? "" : getApiErrorMessage(payload));
       setNotes(payload.ok ? payload.data?.notes ?? [] : []);
       setNotesLoading(false);
     }
@@ -914,12 +952,14 @@ export function NoteWorkspace({
       }
 
       if (!response.ok || !payload.ok || !payload.data?.note) {
+        setWorkspaceError(getApiErrorMessage(payload));
         setSelectedNote(null);
         setNoteLoading(false);
         setNoteNotFound(true);
         return;
       }
 
+      setWorkspaceError("");
       setSelectedNote(payload.data.note);
       setNoteLoading(false);
     }
@@ -933,6 +973,7 @@ export function NoteWorkspace({
 
   async function createNote() {
     setCreateLoading(true);
+    setWorkspaceError("");
 
     try {
       const response = await fetch("/api/notes", {
@@ -948,9 +989,11 @@ export function NoteWorkspace({
       const payload = (await response.json()) as NoteResponse;
 
       if (!response.ok || !payload.ok || !payload.data?.note) {
+        setWorkspaceError(getApiErrorMessage(payload));
         return;
       }
 
+      setWorkspaceError("");
       setNotes((current) => [payload.data!.note, ...current]);
       startRouting(() => {
         router.push(`/app/notes/${payload.data!.note.id}`);
@@ -966,6 +1009,7 @@ export function NoteWorkspace({
     }
 
     setDeleteLoading(true);
+    setWorkspaceError("");
 
     try {
       const response = await fetch(`/api/notes/${selectedNote.id}`, {
@@ -974,9 +1018,11 @@ export function NoteWorkspace({
       const payload = (await response.json()) as NoteResponse;
 
       if (!response.ok || !payload.ok) {
+        setWorkspaceError(getApiErrorMessage(payload));
         return;
       }
 
+      setWorkspaceError("");
       setNotes((current) => current.filter((note) => note.id !== selectedNote.id));
       setDeleteDialogOpen(false);
       startRouting(() => {
@@ -1131,6 +1177,11 @@ export function NoteWorkspace({
           </div>
 
           <div className="flex-1 overflow-y-auto p-2">
+            {workspaceError ? (
+              <div className="mx-2 mb-2 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-sm text-destructive">
+                {workspaceError}
+              </div>
+            ) : null}
             <NoteList
               loading={notesLoading}
               notes={notes}

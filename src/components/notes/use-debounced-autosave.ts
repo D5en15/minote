@@ -32,6 +32,7 @@ type UseDebouncedAutosaveOptions = {
   contentMarkdown: string;
   onDraftRecovered: (draft: DraftSnapshot) => void;
   onSaved: (note: NoteWithTags) => void;
+  onError?: (message: string) => void;
 };
 
 type NoteResponse = {
@@ -98,6 +99,7 @@ export function useDebouncedAutosave({
   contentMarkdown,
   onDraftRecovered,
   onSaved,
+  onError,
 }: UseDebouncedAutosaveOptions) {
   const [status, setStatus] = useState<AutosaveStatus>("idle");
   const [baselineSnapshot, setBaselineSnapshot] = useState<DraftSnapshot | null>(() =>
@@ -230,6 +232,7 @@ export function useDebouncedAutosave({
           });
           setConflictDialogOpen(true);
           setStatus("failed");
+          onError?.("Another session updated this note first. Resolve the conflict to keep editing.");
           return false;
         }
 
@@ -241,6 +244,12 @@ export function useDebouncedAutosave({
           persistDraft(draft, baseRevision);
           pendingRetryRef.current = true;
           setStatus(isOnline ? "failed" : "offline");
+          onError?.(
+            payload.error?.message ||
+              (response.status === 401
+                ? "Your session expired. Please sign in again."
+                : "Unable to save this note right now.")
+          );
           return false;
         }
 
@@ -255,12 +264,13 @@ export function useDebouncedAutosave({
         );
         pendingRetryRef.current = true;
         setStatus(isOnline ? "failed" : "offline");
+        onError?.("Unable to save this note right now.");
         return false;
       } finally {
         saveInFlightRef.current = false;
       }
     },
-    [commitSavedNote, isOnline, note, persistDraft]
+    [commitSavedNote, isOnline, note, onError, persistDraft]
   );
 
   const retryPendingSave = useCallback(async () => {
