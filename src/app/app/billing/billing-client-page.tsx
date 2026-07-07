@@ -7,17 +7,23 @@ import { Button } from "@/components/ui/button";
 
 type BillingStatus = {
   isPremium: boolean;
+  tier: "free" | "pro" | "studio";
   planId: string;
   planName: string;
   subscriptionStatus: string | null;
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
   graceUntil: string | null;
+  noteLimit: number;
+  dailyCreateLimit: number;
+  maxTagsPerNote: number | null;
+  canUseLoraShareFont: boolean;
+  canHideShareBranding: boolean;
+  canHideShareMetadata: boolean;
+  canUseAdvancedFocus: boolean;
+  canAccessPrioritySupport: boolean;
+  isInGracePeriod: boolean;
 };
-
-// In real Stripe config, these Price IDs are loaded from env variables, but in MVP client we can define default keys for mock checkout
-const MOCK_MONTHLY_PRICE_ID = "price_premium_monthly";
-const MOCK_YEARLY_PRICE_ID = "price_premium_yearly";
 
 export default function BillingClientPage() {
   const searchParams = useSearchParams();
@@ -141,6 +147,16 @@ export default function BillingClientPage() {
         </div>
       )}
 
+      {billing?.isInGracePeriod ? (
+        <div className="mt-4 rounded-md border border-amber-500 bg-amber-500/10 p-4 text-amber-700 dark:text-amber-400">
+          <p className="text-sm font-semibold">Payment issue detected</p>
+          <p className="mt-1 text-xs">
+            Your subscription is in grace period. Premium features remain available
+            temporarily while payment is resolved.
+          </p>
+        </div>
+      ) : null}
+
       {/* Plan status display */}
       <div className="mt-6 rounded-md border border-border bg-card p-5">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -173,7 +189,7 @@ export default function BillingClientPage() {
                     )}
                   </>
                 ) : (
-                  "Upgrade to write unlimited notes and create customized note shares."
+                  `Current free limits: ${billing?.dailyCreateLimit ?? 3} new notes per day, ${billing?.noteLimit ?? 50} total notes, and ${billing?.maxTagsPerNote ?? 3} tags per note.`
                 )}
               </p>
             </div>
@@ -197,105 +213,152 @@ export default function BillingClientPage() {
 
       {/* Pricing options list if not premium */}
       {!billing?.isPremium && (
-        <div className="mt-8 space-y-6">
-          <div className="grid gap-6 sm:grid-cols-2">
-            {/* Monthly Plan Option */}
-            <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-6 shadow-sm">
-              <div>
-                <h4 className="text-lg font-semibold">Premium Monthly</h4>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Zen editing space billed monthly. Cancel anytime.
-                </p>
-                <div className="mt-4 flex items-baseline">
-                  <span className="text-3xl font-bold">$9</span>
-                  <span className="ml-1 text-sm text-muted-foreground">/month</span>
-                </div>
-                <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
-                  <li className="flex items-center gap-2">
-                    <Check className="size-4 text-emerald-500 shrink-0" />
-                    <span>Unlimited notes creation</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="size-4 text-emerald-500 shrink-0" />
-                    <span>Customizable read-only shares</span>
-                  </li>
-                  <li className="flex items-center gap-2">
-                    <Check className="size-4 text-emerald-500 shrink-0" />
-                    <span>Password-protected shared pages</span>
-                  </li>
-                </ul>
-              </div>
-              <Button
-                className="mt-6 w-full"
-                disabled={checkoutPending}
-                onClick={() => handleCheckout(MOCK_MONTHLY_PRICE_ID)}
-              >
-                {checkoutPending ? (
-                  <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
-                ) : null}
-                Upgrade Monthly
-              </Button>
-            </div>
+        <div className="mt-8 space-y-8">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <h3 className="text-2xl font-bold font-sans">Choose your Zen plan</h3>
+            <p className="text-sm text-muted-foreground">Unlock unlimited potential with our clean writing environment workspace.</p>
+          </div>
 
-            {/* Yearly Plan Option */}
-            <div className="flex flex-col justify-between rounded-lg border border-border bg-card p-6 shadow-sm">
+          <div className="grid gap-6 md:grid-cols-2">
+            {/* Zen Pro Plan Card */}
+            <div className="flex flex-col justify-between rounded-lg border-2 border-border bg-card p-6 shadow-sm">
               <div>
                 <div className="flex items-center justify-between">
-                  <h4 className="text-lg font-semibold">Premium Yearly</h4>
-                  <span className="rounded-full bg-emerald-500/15 px-2.5 py-0.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">
-                    Save 20%
+                  <h4 className="text-xl font-bold font-sans text-primary">Zen Pro</h4>
+                  <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs text-primary font-semibold">
+                    Best Value
                   </span>
                 </div>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Write note drafts consistently over a year with max savings.
+                  For creators, freelancers, and writers who need unlimited notes, tags, and custom serif typography (Lora).
                 </p>
-                <div className="mt-4 flex items-baseline">
-                  <span className="text-3xl font-bold">$89</span>
-                  <span className="ml-1 text-sm text-muted-foreground">/year</span>
+                
+                {/* Price selector monthly / yearly */}
+                <div className="mt-6 space-y-4">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-extrabold font-sans">$4.99</span>
+                    <span className="text-sm text-muted-foreground">/ month</span>
+                  </div>
+                  <Button
+                    className="w-full font-semibold"
+                    disabled={checkoutPending}
+                    onClick={() => handleCheckout("price_premium_monthly")}
+                  >
+                    {checkoutPending ? (
+                      <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
+                    ) : null}
+                    Upgrade Pro Monthly
+                  </Button>
+
+                  <div className="border-t border-border pt-4">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-extrabold font-sans">$47.88</span>
+                      <span className="text-sm text-muted-foreground">/ year</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="mt-2 w-full font-semibold"
+                      disabled={checkoutPending}
+                      onClick={() => handleCheckout("price_premium_yearly")}
+                    >
+                      {checkoutPending ? (
+                        <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
+                      ) : null}
+                      Upgrade Pro Yearly
+                    </Button>
+                  </div>
                 </div>
-                <ul className="mt-6 space-y-3 text-sm text-muted-foreground">
+
+                <ul className="mt-6 space-y-3 text-sm text-muted-foreground border-t border-border pt-4">
                   <li className="flex items-center gap-2">
                     <Check className="size-4 text-emerald-500 shrink-0" />
-                    <span>Unlimited notes creation</span>
+                    <span>Unlimited notes creation & storage</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4 text-emerald-500 shrink-0" />
-                    <span>Customizable read-only shares</span>
+                    <span>Unlimited tags per note</span>
                   </li>
                   <li className="flex items-center gap-2">
                     <Check className="size-4 text-emerald-500 shrink-0" />
-                    <span>Password-protected shared pages</span>
+                    <span>Premium serif font option (Lora)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-emerald-500 shrink-0" />
+                    <span>Advanced focus mode features (Phase 2 Ready)</span>
                   </li>
                 </ul>
               </div>
-              <Button
-                className="mt-6 w-full"
-                disabled={checkoutPending}
-                onClick={() => handleCheckout(MOCK_YEARLY_PRICE_ID)}
-              >
-                {checkoutPending ? (
-                  <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
-                ) : null}
-                Upgrade Yearly
-              </Button>
             </div>
-          </div>
 
-          {/* Trial / Guest Mode Invitation block */}
-          <div className="rounded-lg border border-dashed border-border bg-muted/40 p-6 text-center">
-            <h4 className="font-semibold text-base">Want to try Minote first?</h4>
-            <p className="mt-2 text-sm text-muted-foreground max-w-lg mx-auto">
-              You can start writing and testing the editor immediately in Guest Mode. Your drafts will be saved locally in this browser.
-            </p>
-            <Button
-              className="mt-4"
-              onClick={() => {
-                window.location.href = "/";
-              }}
-              variant="outline"
-            >
-              Start Local Workspace Trial
-            </Button>
+            {/* Zen Studio Plan Card */}
+            <div className="flex flex-col justify-between rounded-lg border-2 border-purple-500/30 bg-card p-6 shadow-sm relative">
+              <div className="absolute top-0 right-6 -translate-y-1/2 rounded-full bg-purple-600 px-3 py-0.5 text-xs font-semibold text-white">
+                White-label
+              </div>
+              <div>
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xl font-bold font-sans text-purple-600 dark:text-purple-400">Zen Studio</h4>
+                </div>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  For professional writers and personal brands. Completely remove Minote branding and customize shared metadata.
+                </p>
+
+                {/* Price selector monthly / yearly */}
+                <div className="mt-6 space-y-4">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-extrabold font-sans">$11.99</span>
+                    <span className="text-sm text-muted-foreground">/ month</span>
+                  </div>
+                  <Button
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold"
+                    disabled={checkoutPending}
+                    onClick={() => handleCheckout("price_studio_monthly")}
+                  >
+                    {checkoutPending ? (
+                      <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
+                    ) : null}
+                    Upgrade Studio Monthly
+                  </Button>
+
+                  <div className="border-t border-border pt-4">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-extrabold font-sans">$115.08</span>
+                      <span className="text-sm text-muted-foreground">/ year</span>
+                    </div>
+                    <Button
+                      variant="outline"
+                      className="mt-2 w-full border-purple-500/30 text-purple-600 dark:text-purple-400 hover:bg-purple-500/10 font-semibold"
+                      disabled={checkoutPending}
+                      onClick={() => handleCheckout("price_studio_yearly")}
+                    >
+                      {checkoutPending ? (
+                        <Loader2 className="size-4 animate-spin mr-2" aria-hidden="true" />
+                      ) : null}
+                      Upgrade Studio Yearly
+                    </Button>
+                  </div>
+                </div>
+
+                <ul className="mt-6 space-y-3 text-sm text-muted-foreground border-t border-border pt-4">
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-purple-500 shrink-0" />
+                    <span>Includes all Zen Pro features</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-purple-500 shrink-0" />
+                    <span>Watermark Whitelabel (Hide &quot;Powered by Minote&quot;)</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-purple-500 shrink-0" />
+                    <span>Customizable metadata layout settings</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <Check className="size-4 text-purple-500 shrink-0" />
+                    <span>Priority Routing Support channels</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       )}

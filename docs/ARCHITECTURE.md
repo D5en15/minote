@@ -27,6 +27,7 @@
 * ใช้ **RLS เป็น security boundary หลัก** สำหรับข้อมูลผู้ใช้
 * ใช้ **Route Handlers/Server Actions** สำหรับ business logic ที่ต้องตรวจ entitlement, quota และ audit
 * ใช้ **Stripe webhook แบบ idempotent** เพื่อ sync subscription state
+* sync profile-level subscription snapshot (`tier`, `stripe_customer_id`, `stripe_subscription_status`, `current_period_end`) ควบคู่กับ `subscriptions` เพื่อให้ middleware/UI gating อ่านได้เร็ว
 * ใช้ **localStorage เฉพาะ Guest Mode** ไม่ใช้เป็น source of truth หลัง login
 
 ## 2. System Architecture Diagram
@@ -75,6 +76,10 @@ graph TD
 | display_name | text | nullable | ชื่อที่แสดง |
 | avatar_url | text | nullable | จาก OAuth |
 | role | text | indexed | `user`, `admin` |
+| tier | text | indexed | `free`, `pro`, `studio` snapshot สำหรับ gating เร็ว |
+| stripe_customer_id | text | indexed nullable | profile-level Stripe customer snapshot |
+| stripe_subscription_status | text | nullable | latest synced Stripe status |
+| current_period_end | timestamptz | nullable | latest synced renewal/end date |
 | created_at | timestamptz | | |
 | updated_at | timestamptz | | |
 | deleted_at | timestamptz | nullable | soft delete account |
@@ -83,13 +88,27 @@ graph TD
 
 | Field | Type | Key | Notes |
 |---|---|---|---|
-| id | text | PK | `free`, `premium_monthly`, `premium_yearly` |
+| id | text | PK | `free`, `premium_monthly`, `premium_yearly`, `studio_monthly`, `studio_yearly` |
 | name | text | | |
+| tier | text | | `free`, `pro`, `studio` |
+| billing_interval | text | | `forever`, `monthly`, `yearly` |
 | note_limit | integer | | จำนวน note รวม |
 | daily_create_limit | integer | | จำนวน note ใหม่ต่อวัน |
+| monthly_price_usd_cents | integer | nullable | ราคาแบบ monthly เป็น cents |
+| yearly_price_usd_cents | integer | nullable | ราคาแบบ yearly เป็น cents |
+| max_tags_per_note | integer | nullable | `null` = unlimited |
 | version_retention_days | integer | | 0 สำหรับ Free |
 | can_password_share | boolean | | |
 | can_customize_share | boolean | | |
+| can_use_lora_share_font | boolean | | เปิด typography แบบ Lora |
+| can_hide_share_branding | boolean | | Studio whitelabel |
+| can_hide_share_metadata | boolean | | Studio shared view controls |
+| can_use_advanced_focus | boolean | | Pro/Studio focus mode gating |
+| can_access_priority_support | boolean | | Studio support routing |
+| phase2_pdf_export_ready | boolean | | placeholder flag |
+| phase2_version_history_ready | boolean | | placeholder flag |
+| phase2_password_share_ready | boolean | | placeholder flag |
+| phase2_share_expiration_ready | boolean | | placeholder flag |
 | created_at | timestamptz | | |
 
 ### 3.3 `subscriptions`
@@ -102,7 +121,7 @@ graph TD
 | provider | text | | `stripe` |
 | provider_customer_id | text | indexed | Stripe customer id |
 | provider_subscription_id | text | unique nullable | Stripe subscription id |
-| status | text | indexed | `active`, `trialing`, `past_due`, `canceled`, `expired`, `payment_failed`, `refunded` |
+| status | text | indexed | `active`, `trialing`, `past_due`, `canceled`, `expired`, `unpaid`, `payment_failed`, `refunded` |
 | current_period_start | timestamptz | nullable | |
 | current_period_end | timestamptz | nullable | |
 | cancel_at_period_end | boolean | default false | |
@@ -171,6 +190,10 @@ Relationship:
 | password_hash | text | nullable | Phase 2 |
 | expires_at | timestamptz | nullable | optional |
 | last_accessed_at | timestamptz | nullable | |
+| font_family | text | | `poppins`, `lora` |
+| show_branding | boolean | | Free/Pro forced true, Studio toggle ได้ |
+| show_theme_toggle | boolean | | Studio toggle ได้ |
+| show_created_at | boolean | | Studio toggle ได้ |
 | created_at | timestamptz | | |
 | revoked_at | timestamptz | nullable | |
 
@@ -383,7 +406,14 @@ Webhook requirements:
 * Store event id ใน `stripe_events`
 * Ignore duplicate event id
 * Update `subscriptions` idempotently
+* Update `profiles.tier` และ Stripe snapshot fields ทุกครั้งที่ subscription state เปลี่ยน
 * Write audit log
+
+Subscription enforcement notes:
+
+* Free tier ใช้ `plans.note_limit = 50`, `plans.daily_create_limit = 3`, `plans.max_tags_per_note = 3`
+* Quota enforcement เกิดฝั่ง backend ตอน create note และ attach tag
+* Downgrade เป็น free ไม่ลบข้อมูลเดิม แต่จะโดน block การสร้าง note ใหม่อัตโนมัติถ้ายังเกิน limit
 
 ### 5.9 Admin API
 
@@ -440,10 +470,11 @@ Webhook requirements:
 ### 7.5 Subscription Rules
 
 * Stripe webhook เป็น source of truth ด้าน payment status
-* App entitlement อ่านจาก `subscriptions.status` และ `plans`
+* App entitlement อ่านจาก `subscriptions.status`, `plans` และ profile snapshot fields เมื่อเหมาะสม
 * Past due เข้า grace period
 * Downgrade ไม่ลบ notes หลัก
 * Premium-only data ถูก lock และ purge ตาม policy
+* Share styling/branding ใช้ feature gating จาก `plans` แล้ว persist ต่อ link ใน `share_links`
 
 ## 8. Suggested Project Structure
 
@@ -508,4 +539,3 @@ src/
 * Supabase Row Level Security docs: https://supabase.com/docs/guides/database/postgres/row-level-security
 * Stripe Billing subscriptions docs: https://docs.stripe.com/billing/subscriptions/overview
 * Resend docs: https://resend.com/docs/introduction
-

@@ -229,20 +229,19 @@
 
 #### Features
 
-* Free plan
-* Premium Monthly
-* Premium Yearly
-* Stripe Checkout หรือ Customer Portal
-* Stripe webhook สำหรับ sync subscription state
+* Zen Free Plan ($0 / Free forever): จำกัดการสร้างบันทึกใหม่ 3 โน้ต/วัน, บันทึกรวมสูงสุด 50 โน้ต (นับรวมโน้ตใน Trash), จำกัด 3 tags ต่อโน้ต, แชร์ public แสดง font Poppins พร้อมลายน้ำ "Powered by Minote"
+* Zen Pro Plan ($4.99/mo หรือ $47.88/yr): ปลดล็อกข้อจำกัดทั้งหมด, แชร์ public เลือกฟอนต์ Lora (Serif) ได้, เข้าถึง Advanced Focus Mode
+* Zen Studio Plan ($11.99/mo หรือ $115.08/yr): ปลดล็อก Whitelabel ลบลายน้ำออกจากหน้าแชร์, ตั้งค่า metadata visibility ได้
+* Stripe Checkout & Customer Portal
+* Stripe Webhook สำหรับซิงก์ข้อมูลสถานะ active, trialing, past_due, canceled, expired, unpaid, payment_failed, refunded
 
 #### Business Logic & Edge Cases
 
-* MVP ใช้ Stripe เป็นหลัก
-* ต้องรองรับสถานะ active, trialing, past_due, canceled, expired, payment_failed, refunded
-* หาก payment failed ให้เข้าสู่ grace period
-* หาก downgrade เป็น Free ต้อง lock premium-only features แต่ยังให้เข้าถึง notes หลัก
-* Premium-derived data เช่น version history ต้องซ่อนก่อน แล้ว purge หลังครบ grace period ตาม policy
-* PromptPay ให้เป็น Phase 2 หรือ manual renewal
+* ระบบ Quota counters นับรวมโน้ตที่ถูกลบชั่วคราวใน Trash
+* ดำเนินการ Grace Period 7 วันสำหรับสถานะ past_due
+* นโยบาย Downgrade Management Policy: ห้ามลบข้อมูลลูกค้าเดิมหากใช้บริการเกินโควตา Free plan แต่จะล็อกการสร้างโน้ตใหม่จนกว่าจะจัดการลบข้อมูลส่วนเกินออก หรือทำการสมัครใช้บริการต่ออีกครั้ง
+* ระบบต้องเก็บ profile-level subscription snapshot (`tier`, `stripe_customer_id`, `stripe_subscription_status`, `current_period_end`) เพื่อให้ dashboard และ feature gating อ่านสถานะล่าสุดได้โดยไม่ต้อง join ซ้ำทุก request
+* Shared link settings ต้องถูก persist ต่อ link เพื่อให้ downgrade ภายหลังไม่ทำข้อมูลหาย แต่สิทธิ์ในการแก้ setting ใหม่ต้องอิง plan ปัจจุบัน
 
 ### 3.10 Admin & Audit Module
 
@@ -317,4 +316,3 @@
 * Shared page ต้องไม่ถูก index โดย search engine
 * Stripe webhook ต้องอัปเดต subscription state ได้ถูกต้อง
 * User data ต้องถูกบังคับด้วย RLS และ owner check
-

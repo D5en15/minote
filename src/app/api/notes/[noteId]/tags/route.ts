@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 
 import { errorResponse, successResponse } from "@/server/api-response";
+import { QuotaExceededError } from "@/server/errors";
 import { requireUser } from "@/server/auth";
 import { noteIdParamSchema, tagInputSchema } from "@/server/schemas";
 import { attachTagToUserNote } from "@/server/services/tags";
@@ -64,8 +65,10 @@ export async function POST(request: NextRequest, context: NoteTagsRouteContext) 
 
     return successResponse({ note });
   } catch (error) {
-    if (error instanceof Error && error.message === "TAG_LIMIT_REACHED") {
-      return errorResponse("FORBIDDEN", "Tag limit reached for this note");
+    if (error instanceof QuotaExceededError) {
+      return errorResponse("FORBIDDEN", "QUOTA_EXCEEDED", {
+        details: error.details,
+      });
     }
 
     return errorResponse("INTERNAL_ERROR", "Unable to attach tag");

@@ -8,7 +8,11 @@ import { validateEnv } from "@/lib/env";
 import { createServiceRoleClient } from "@/server/supabase/service-role";
 import { writeAuditLog } from "@/server/audit";
 import { AUDIT_ENTITIES, AUDIT_EVENTS } from "@/server/audit-events";
-import type { SubscriptionStatus } from "@/types/database";
+import type { Json, SubscriptionStatus } from "@/types/database";
+import {
+  getTierFromPlanId,
+  resolvePlanIdFromStripePriceId,
+} from "@/server/billing/plans";
 
 // Map Stripe subscription status to our database schema status
 const STRIPE_STATUS_MAP: Record<string, SubscriptionStatus> = {
@@ -16,10 +20,15 @@ const STRIPE_STATUS_MAP: Record<string, SubscriptionStatus> = {
   trialing: "trialing",
   past_due: "past_due",
   canceled: "canceled",
-  unpaid: "payment_failed",
+  unpaid: "unpaid",
   incomplete: "payment_failed",
   incomplete_expired: "expired",
   paused: "canceled",
+};
+
+type StripeSubscriptionEventPayload = Stripe.Subscription & {
+  current_period_start: number;
+  current_period_end: number;
 };
 
 export async function POST(request: NextRequest) {
@@ -71,7 +80,7 @@ export async function POST(request: NextRequest) {
         id: event.id,
         type: event.type,
         processed_at: new Date().toISOString(),
-        payload: event.data.object as any,
+        payload: JSON.parse(JSON.stringify(event.data.object)) as Json,
       });
 
     if (insertEventError) {
@@ -94,7 +103,7 @@ export async function POST(request: NextRequest) {
       event.type === "customer.subscription.updated" ||
       event.type === "customer.subscription.deleted"
     ) {
-      const stripeSub = event.data.object as any;
+      const stripeSub = event.data.object as StripeSubscriptionEventPayload;
       const stripeCustomerId = stripeSub.customer as string;
 
       // Extract metadata or find user ID from Stripe customer
@@ -111,18 +120,9 @@ export async function POST(request: NextRequest) {
         throw new Error(`User ID not found for Stripe customer: ${stripeCustomerId}`);
       }
 
-      // Map Plan ID from subscription pricing plan
       const priceId = stripeSub.items.data[0]?.price.id;
-      // Define plans mapping logic: free, premium_monthly, premium_yearly
-      // (For verification script, let's map stripe pricing product identifiers or match IDs)
-      let planId = "free";
-      if (priceId) {
-        if (priceId.includes("yearly") || priceId.includes("year")) {
-          planId = "premium_yearly";
-        } else {
-          planId = "premium_monthly";
-        }
-      }
+      const planId = resolvePlanIdFromStripePriceId(priceId);
+      const tier = getTierFromPlanId(planId);
 
       const status: SubscriptionStatus = STRIPE_STATUS_MAP[stripeSub.status] ?? "payment_failed";
       const currentPeriodStart = new Date((stripeSub.current_period_start as number) * 1000).toISOString();
@@ -180,6 +180,22 @@ export async function POST(request: NextRequest) {
         throw subUpsertError;
       }
 
+      // Keep a profile-level subscription snapshot for fast tier-aware gating.
+      const { error: profileSyncError } = await supabase
+        .from("profiles")
+        .update({
+          tier: status === "active" || status === "trialing" || status === "past_due" ? tier : "free",
+          stripe_customer_id: stripeCustomerId,
+          stripe_subscription_status: status,
+          current_period_end: currentPeriodEnd,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", userId);
+
+      if (profileSyncError) {
+        throw profileSyncError;
+      }
+
       // Audit logs for subscription status update
       await writeAuditLog({
         actorUserId: userId,
@@ -190,6 +206,7 @@ export async function POST(request: NextRequest) {
           subscriptionId: stripeSub.id,
           status,
           planId,
+          tier,
         },
       });
     }

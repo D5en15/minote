@@ -25,11 +25,21 @@ export async function getBillingStatus(userId: string) {
   const entitlement = await getQuotaEntitlement(userId);
   return {
     isPremium: entitlement.isPremium,
+    tier: entitlement.tier,
     planId: entitlement.plan.id,
     planName: entitlement.plan.name,
     subscriptionStatus: entitlement.subscription?.status ?? null,
     currentPeriodEnd: entitlement.subscription?.current_period_end ?? null,
     cancelAtPeriodEnd: entitlement.subscription?.cancel_at_period_end ?? false,
     graceUntil: entitlement.subscription?.grace_until ?? null,
+    noteLimit: entitlement.noteLimit,
+    dailyCreateLimit: entitlement.dailyCreateLimit,
+    maxTagsPerNote: entitlement.maxTagsPerNote,
+    canUseLoraShareFont: entitlement.canUseLoraShareFont,
+    canHideShareBranding: entitlement.canHideShareBranding,
+    canHideShareMetadata: entitlement.canHideShareMetadata,
+    canUseAdvancedFocus: entitlement.canUseAdvancedFocus,
+    canAccessPrioritySupport: entitlement.canAccessPrioritySupport,
+    isInGracePeriod: entitlement.isInGracePeriod,
   };
 }

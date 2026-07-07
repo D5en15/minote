@@ -63,6 +63,20 @@ type ShareResponse = {
   };
 };
 
+type ShareSettingsResponse = {
+  ok: boolean;
+  data?: {
+    shareLink: NonNullable<NoteWithTags["activeShareLink"]>;
+  };
+};
+
+type ShareSettingsDraft = {
+  fontFamily: "poppins" | "lora";
+  showBranding: boolean;
+  showThemeToggle: boolean;
+  showCreatedAt: boolean;
+};
+
 type TagsResponse = {
   ok: boolean;
   data?: {
@@ -181,6 +195,12 @@ function NoteEditorPanel({
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [shareLoading, setShareLoading] = useState(false);
   const [shareError, setShareError] = useState("");
+  const [shareSettings, setShareSettings] = useState<ShareSettingsDraft>({
+    fontFamily: note.activeShareLink?.fontFamily ?? "poppins",
+    showBranding: note.activeShareLink?.showBranding ?? true,
+    showThemeToggle: note.activeShareLink?.showThemeToggle ?? true,
+    showCreatedAt: note.activeShareLink?.showCreatedAt ?? true,
+  });
   const [exportLoading, setExportLoading] = useState(false);
   const autosave = useDebouncedAutosave({
     note,
@@ -242,6 +262,10 @@ function NoteEditorPanel({
     try {
       const response = await fetch(`/api/notes/${note.id}/share`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(shareSettings),
       });
       const payload = (await response.json()) as ShareResponse;
 
@@ -267,6 +291,10 @@ function NoteEditorPanel({
     try {
       const response = await fetch(`/api/notes/${note.id}/share/regenerate`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(shareSettings),
       });
       const payload = (await response.json()) as ShareResponse;
 
@@ -316,6 +344,38 @@ function NoteEditorPanel({
     }
 
     await navigator.clipboard.writeText(shareUrl);
+  }
+
+  async function saveShareSettings() {
+    if (!note.activeShareLink || shareLoading) {
+      return;
+    }
+
+    setShareLoading(true);
+    setShareError("");
+
+    try {
+      const response = await fetch(`/api/notes/${note.id}/share`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(shareSettings),
+      });
+      const payload = (await response.json()) as ShareSettingsResponse;
+
+      if (!response.ok || !payload.ok || !payload.data) {
+        setShareError("Unable to save share settings");
+        return;
+      }
+
+      onSavedNote({
+        ...note,
+        activeShareLink: payload.data.shareLink,
+      });
+    } finally {
+      setShareLoading(false);
+    }
   }
 
   async function handleExportMarkdown() {
@@ -388,7 +448,15 @@ function NoteEditorPanel({
             Export
           </Button>
           <Button
-            onClick={() => setShareDialogOpen(true)}
+            onClick={() => {
+              setShareSettings({
+                fontFamily: note.activeShareLink?.fontFamily ?? "poppins",
+                showBranding: note.activeShareLink?.showBranding ?? true,
+                showThemeToggle: note.activeShareLink?.showThemeToggle ?? true,
+                showCreatedAt: note.activeShareLink?.showCreatedAt ?? true,
+              });
+              setShareDialogOpen(true);
+            }}
             size="sm"
             type="button"
             variant="outline"
@@ -540,7 +608,20 @@ function NoteEditorPanel({
         </DialogContent>
       </Dialog>
 
-      <Dialog open={shareDialogOpen} onOpenChange={setShareDialogOpen}>
+      <Dialog
+        open={shareDialogOpen}
+        onOpenChange={(open) => {
+          if (open) {
+            setShareSettings({
+              fontFamily: note.activeShareLink?.fontFamily ?? "poppins",
+              showBranding: note.activeShareLink?.showBranding ?? true,
+              showThemeToggle: note.activeShareLink?.showThemeToggle ?? true,
+              showCreatedAt: note.activeShareLink?.showCreatedAt ?? true,
+            });
+          }
+          setShareDialogOpen(open);
+        }}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Share note</DialogTitle>
@@ -556,20 +637,117 @@ function NoteEditorPanel({
               readOnly
               value={shareUrl || "Generate a share link to copy it."}
             />
+            <div className="grid gap-3 rounded-md border border-border p-3">
+              <div className="space-y-1">
+                <p className="text-sm font-medium">Typography</p>
+                <div className="flex gap-2">
+                  <Button
+                    onClick={() =>
+                      setShareSettings((current) => ({
+                        ...current,
+                        fontFamily: "poppins",
+                      }))
+                    }
+                    size="sm"
+                    type="button"
+                    variant={
+                      shareSettings.fontFamily === "poppins" ? "default" : "outline"
+                    }
+                  >
+                    Poppins
+                  </Button>
+                  <Button
+                    onClick={() =>
+                      setShareSettings((current) => ({
+                        ...current,
+                        fontFamily: "lora",
+                      }))
+                    }
+                    size="sm"
+                    type="button"
+                    variant={shareSettings.fontFamily === "lora" ? "default" : "outline"}
+                  >
+                    Lora
+                  </Button>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Lora is available on Pro and Studio. Free links stay on Poppins.
+                </p>
+              </div>
+              <div className="grid gap-2">
+                <label className="flex items-center justify-between gap-3 text-sm">
+                  <span>Show Powered by Minote watermark</span>
+                  <input
+                    checked={shareSettings.showBranding}
+                    className="size-4"
+                    onChange={(event) =>
+                      setShareSettings((current) => ({
+                        ...current,
+                        showBranding: event.target.checked,
+                      }))
+                    }
+                    type="checkbox"
+                  />
+                </label>
+                <label className="flex items-center justify-between gap-3 text-sm">
+                  <span>Show theme toggle to visitors</span>
+                  <input
+                    checked={shareSettings.showThemeToggle}
+                    className="size-4"
+                    onChange={(event) =>
+                      setShareSettings((current) => ({
+                        ...current,
+                        showThemeToggle: event.target.checked,
+                      }))
+                    }
+                    type="checkbox"
+                  />
+                </label>
+                <label className="flex items-center justify-between gap-3 text-sm">
+                  <span>Show published date</span>
+                  <input
+                    checked={shareSettings.showCreatedAt}
+                    className="size-4"
+                    onChange={(event) =>
+                      setShareSettings((current) => ({
+                        ...current,
+                        showCreatedAt: event.target.checked,
+                      }))
+                    }
+                    type="checkbox"
+                  />
+                </label>
+              </div>
+              <div className="rounded-md bg-muted/50 p-3 text-xs text-muted-foreground">
+                Password-protected links and expiration rules are Phase 2 placeholders.
+              </div>
+            </div>
             {shareError ? (
               <p className="text-sm text-destructive">{shareError}</p>
             ) : null}
           </div>
           <DialogFooter className="gap-2 sm:justify-between">
-            <Button
-              disabled={shareLoading || !shareUrl}
-              onClick={() => void copyShareLink()}
-              type="button"
-              variant="outline"
-            >
-              <Copy className="size-4" aria-hidden="true" />
-              Copy share link
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                disabled={shareLoading || !shareUrl}
+                onClick={() => void copyShareLink()}
+                type="button"
+                variant="outline"
+              >
+                <Copy className="size-4" aria-hidden="true" />
+                Copy share link
+              </Button>
+              {note.activeShareLink ? (
+                <Button
+                  disabled={shareLoading}
+                  onClick={saveShareSettings}
+                  type="button"
+                  variant="outline"
+                >
+                  Save settings
+                </Button>
+              ) : null}
+            </div>
             <div className="flex flex-wrap justify-end gap-2">
               {note.activeShareLink ? (
                 <>

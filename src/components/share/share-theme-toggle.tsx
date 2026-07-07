@@ -23,13 +23,21 @@ function getPreferredTheme(): ThemePreference {
     : "light";
 }
 
-export function ShareThemeToggle() {
+type ShareThemeToggleProps = {
+  hidden?: boolean;
+};
+
+export function ShareThemeToggle({ hidden = false }: ShareThemeToggleProps) {
   const [theme, setTheme] = useState<ThemePreference>(getPreferredTheme);
 
   useEffect(() => {
     window.localStorage.setItem("minote-share-theme", theme);
     document.documentElement.classList.toggle("dark", theme === "dark");
   }, [theme]);
+
+  if (hidden) {
+    return null;
+  }
 
   return (
     <Button

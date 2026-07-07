@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { z } from "zod";
 
 import { errorResponse, successResponse } from "@/server/api-response";
+import { QuotaExceededError } from "@/server/errors";
 import { requireUser } from "@/server/auth";
 import { noteCreateSchema, noteListQuerySchema } from "@/server/schemas";
 import {
@@ -70,14 +71,10 @@ export async function POST(request: NextRequest) {
     const note = await createUserNote(user.id, parsed.data, request);
     return successResponse({ note }, { status: 201 });
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.message === "NOTE_LIMIT_REACHED") {
-        return errorResponse("FORBIDDEN", "Note limit reached");
-      }
-
-      if (error.message === "DAILY_CREATE_LIMIT_REACHED") {
-        return errorResponse("FORBIDDEN", "Daily note creation limit reached");
-      }
+    if (error instanceof QuotaExceededError) {
+      return errorResponse("FORBIDDEN", "QUOTA_EXCEEDED", {
+        details: error.details,
+      });
     }
 
     return errorResponse("INTERNAL_ERROR", "Unable to create note");

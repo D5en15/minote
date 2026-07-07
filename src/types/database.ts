@@ -7,17 +7,21 @@ export type Json =
   | Json[];
 
 export type UserRole = "user" | "admin";
+export type PlanTier = "free" | "pro" | "studio";
+export type BillingInterval = "forever" | "monthly" | "yearly";
 export type SubscriptionStatus =
   | "active"
   | "trialing"
   | "past_due"
   | "canceled"
   | "expired"
+  | "unpaid"
   | "payment_failed"
   | "refunded";
 export type NoteStatus = "active" | "trashed" | "deleted";
 export type ShareLinkStatus = "active" | "revoked";
 export type ShareAccessMode = "public" | "password";
+export type ShareFontFamily = "poppins" | "lora";
 export type NoteVersionReason = "idle_snapshot" | "manual" | "before_conflict";
 
 export type Database = {
@@ -30,6 +34,10 @@ export type Database = {
           display_name: string | null;
           avatar_url: string | null;
           role: UserRole;
+          tier: PlanTier;
+          stripe_customer_id: string | null;
+          stripe_subscription_status: SubscriptionStatus | null;
+          current_period_end: string | null;
           created_at: string;
           updated_at: string;
           deleted_at: string | null;
@@ -40,6 +48,10 @@ export type Database = {
           display_name?: string | null;
           avatar_url?: string | null;
           role?: UserRole;
+          tier?: PlanTier;
+          stripe_customer_id?: string | null;
+          stripe_subscription_status?: SubscriptionStatus | null;
+          current_period_end?: string | null;
           created_at?: string;
           updated_at?: string;
           deleted_at?: string | null;
@@ -51,21 +63,49 @@ export type Database = {
         Row: {
           id: string;
           name: string;
+          tier: PlanTier;
+          billing_interval: BillingInterval;
           note_limit: number;
           daily_create_limit: number;
+          monthly_price_usd_cents: number | null;
+          yearly_price_usd_cents: number | null;
+          max_tags_per_note: number | null;
           version_retention_days: number;
           can_password_share: boolean;
           can_customize_share: boolean;
+          can_use_lora_share_font: boolean;
+          can_hide_share_branding: boolean;
+          can_hide_share_metadata: boolean;
+          can_use_advanced_focus: boolean;
+          can_access_priority_support: boolean;
+          phase2_pdf_export_ready: boolean;
+          phase2_version_history_ready: boolean;
+          phase2_password_share_ready: boolean;
+          phase2_share_expiration_ready: boolean;
           created_at: string;
         };
         Insert: {
           id: string;
           name: string;
+          tier?: PlanTier;
+          billing_interval?: BillingInterval;
           note_limit: number;
           daily_create_limit: number;
+          monthly_price_usd_cents?: number | null;
+          yearly_price_usd_cents?: number | null;
+          max_tags_per_note?: number | null;
           version_retention_days?: number;
           can_password_share?: boolean;
           can_customize_share?: boolean;
+          can_use_lora_share_font?: boolean;
+          can_hide_share_branding?: boolean;
+          can_hide_share_metadata?: boolean;
+          can_use_advanced_focus?: boolean;
+          can_access_priority_support?: boolean;
+          phase2_pdf_export_ready?: boolean;
+          phase2_version_history_ready?: boolean;
+          phase2_password_share_ready?: boolean;
+          phase2_share_expiration_ready?: boolean;
           created_at?: string;
         };
         Update: Partial<Database["public"]["Tables"]["plans"]["Insert"]>;
@@ -180,6 +220,10 @@ export type Database = {
           password_hash: string | null;
           expires_at: string | null;
           last_accessed_at: string | null;
+          font_family: ShareFontFamily;
+          show_branding: boolean;
+          show_theme_toggle: boolean;
+          show_created_at: boolean;
           created_at: string;
           revoked_at: string | null;
         };
@@ -193,6 +237,10 @@ export type Database = {
           password_hash?: string | null;
           expires_at?: string | null;
           last_accessed_at?: string | null;
+          font_family?: ShareFontFamily;
+          show_branding?: boolean;
+          show_theme_toggle?: boolean;
+          show_created_at?: boolean;
           created_at?: string;
           revoked_at?: string | null;
         };
@@ -317,6 +365,10 @@ export type ActiveShareLinkSummary = {
   createdAt: string;
   expiresAt: string | null;
   status: ShareLinkStatus;
+  fontFamily: ShareFontFamily;
+  showBranding: boolean;
+  showThemeToggle: boolean;
+  showCreatedAt: boolean;
 };
 export type NoteWithTags = Note & {
   tags: Tag[];

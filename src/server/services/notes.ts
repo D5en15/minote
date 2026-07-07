@@ -18,6 +18,7 @@ import {
   type ListNotesFilters,
 } from "@/server/repositories/notes";
 import { getQuotaEntitlement } from "@/server/quota";
+import { QuotaExceededError } from "@/server/errors";
 import { getClientIp, getUserAgent } from "@/server/request";
 import { createServiceRoleClient } from "@/server/supabase/service-role";
 import type { NoteStatus, NoteWithTags } from "@/types/database";
@@ -136,11 +137,21 @@ export async function assertCanCreateNote(userId: string) {
   const notesCreatedToday = usage?.notes_created_count ?? 0;
 
   if (activeAndTrashedCount >= entitlement.noteLimit) {
-    throw new Error("NOTE_LIMIT_REACHED");
+    throw new QuotaExceededError({
+      limitType: "total_notes",
+      tier: entitlement.tier,
+      noteLimit: entitlement.noteLimit,
+      currentCount: activeAndTrashedCount,
+    });
   }
 
   if (notesCreatedToday >= entitlement.dailyCreateLimit) {
-    throw new Error("DAILY_CREATE_LIMIT_REACHED");
+    throw new QuotaExceededError({
+      limitType: "daily_notes",
+      tier: entitlement.tier,
+      dailyCreateLimit: entitlement.dailyCreateLimit,
+      currentCount: notesCreatedToday,
+    });
   }
 }
 

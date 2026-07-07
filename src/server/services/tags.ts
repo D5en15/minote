@@ -12,7 +12,8 @@ import {
   listTagIdsForNote,
   listTagsForUser,
 } from "@/server/repositories/tags";
-import { MAX_TAGS_PER_NOTE } from "@/server/tags";
+import { QuotaExceededError } from "@/server/errors";
+import { getQuotaEntitlement } from "@/server/quota";
 import { getClientIp, getUserAgent } from "@/server/request";
 import type { NextRequest } from "next/server";
 
@@ -34,9 +35,19 @@ export async function attachTagToUserNote(
 
   const existingTagIds = await listTagIdsForNote(noteId);
   const tag = await findOrCreateTag(userId, tagName);
+  const entitlement = await getQuotaEntitlement(userId);
 
-  if (!existingTagIds.includes(tag.id) && existingTagIds.length >= MAX_TAGS_PER_NOTE) {
-    throw new Error("TAG_LIMIT_REACHED");
+  if (
+    entitlement.maxTagsPerNote !== null &&
+    !existingTagIds.includes(tag.id) &&
+    existingTagIds.length >= entitlement.maxTagsPerNote
+  ) {
+    throw new QuotaExceededError({
+      limitType: "tags_per_note",
+      tier: entitlement.tier,
+      maxTagsPerNote: entitlement.maxTagsPerNote,
+      currentCount: existingTagIds.length,
+    });
   }
 
   await attachTagToNote(noteId, tag.id);

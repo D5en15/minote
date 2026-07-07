@@ -6,6 +6,13 @@ import { requireUser } from "@/server/auth";
 import { noteIdParamSchema } from "@/server/schemas";
 import { regenerateNoteShare } from "@/server/services/shares";
 
+const shareSettingsSchema = z.object({
+  fontFamily: z.enum(["poppins", "lora"]).optional(),
+  showBranding: z.boolean().optional(),
+  showThemeToggle: z.boolean().optional(),
+  showCreatedAt: z.boolean().optional(),
+});
+
 type ShareRegenerateRouteContext = {
   params: Promise<{
     noteId: string;
@@ -16,6 +23,12 @@ export async function POST(
   request: NextRequest,
   context: ShareRegenerateRouteContext
 ) {
+  let body: unknown = {};
+
+  try {
+    body = await request.json();
+  } catch {}
+
   let user;
 
   try {
@@ -32,8 +45,21 @@ export async function POST(
     });
   }
 
+  const settings = shareSettingsSchema.safeParse(body);
+
+  if (!settings.success) {
+    return errorResponse("VALIDATION_ERROR", "Invalid share settings", {
+      details: z.flattenError(settings.error).fieldErrors,
+    });
+  }
+
   try {
-    const share = await regenerateNoteShare(params.data.noteId, user.id, request);
+    const share = await regenerateNoteShare(
+      params.data.noteId,
+      user.id,
+      settings.data,
+      request
+    );
 
     if (!share) {
       return errorResponse("NOT_FOUND", "Note not found");

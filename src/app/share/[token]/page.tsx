@@ -28,6 +28,12 @@ export default async function SharedNotePage({ params }: SharedNotePageProps) {
   return (
     <SharedNoteView
       contentMarkdown={shared.note.content_markdown}
+      createdAt={shared.note.created_at}
+      fontFamily={shared.shareLink.font_family}
+      ownerTier={shared.ownerTier}
+      showBranding={shared.shareLink.show_branding}
+      showCreatedAt={shared.shareLink.show_created_at}
+      showThemeToggle={shared.shareLink.show_theme_toggle}
       tags={shared.note.tags}
       title={shared.note.title}
     />
