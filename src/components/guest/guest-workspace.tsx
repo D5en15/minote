@@ -10,7 +10,6 @@ import {
   Zap,
   ArrowRight,
   Check,
-  Minus,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -36,63 +35,65 @@ const YEARLY_PRICE_IDS = {
   studio: "price_studio_yearly",
 } as const;
 
-const PRICING_ROWS = [
-  {
-    feature: "Daily Note Creation Limits",
-    free: "3 notes/day",
-    pro: "Unlimited",
-    studio: "Unlimited",
-  },
-  {
-    feature: "Total Note Cloud Storage",
-    free: "Max 50 notes",
-    pro: "Unlimited",
-    studio: "Unlimited",
-  },
-  {
-    feature: "Shared Page Typographies",
-    free: "Poppins only",
-    pro: "Lora Serif Option",
-    studio: "Lora Serif Option",
-  },
-  {
-    feature: "Minote Branding Watermark",
-    free: "Included",
-    pro: "Included",
-    studio: "Whitelabel / Removed",
-  },
-  {
-    feature: "Advanced Link Security",
-    free: "No",
-    pro: "No",
-    studio: "Yes / Password-protected",
-  },
-] as const;
-
 const PLAN_META = {
   free: {
     name: "Zen Free",
-    monthlyLabel: "$0",
-    monthlySubtext: "Forever free",
-    yearlyLabel: "$0",
-    yearlySubtext: "Forever free",
+    subtitle: "Best for trying out Minote workspace.",
+    priceAmount: "$0",
+    priceCadence: "/ month",
+    helperText: "Start writing in the cloud with essential limits.",
     badge: null,
+    ctaLabel: "Get Started for Free",
+    ctaVariant: "outline" as const,
+    accentClassName: "border-border",
+    featureIconClassName: "text-emerald-500",
+    features: [
+      "3 new notes per day limit",
+      "Max 50 total notes storage",
+      "3 tags limit per note",
+      "Standard Poppins font formatting",
+      "Minote branding watermark included on shared links",
+    ],
   },
   pro: {
     name: "Zen Pro",
-    monthlyLabel: "$4.99/mo",
-    monthlySubtext: "For creators and writers",
-    yearlyLabel: "$47.88/yr",
-    yearlySubtext: "$3.99/mo billed yearly",
-    badge: "Popular",
+    subtitle: "For creators, freelancers, and writers who need unlimited focus.",
+    monthlyAmount: "$4.99",
+    monthlyCadence: "/ month",
+    monthlyHelperText: "Unlimited notes, tags, and Lora typography",
+    yearlyAmount: "$47.88",
+    yearlyCadence: "/ year",
+    yearlyHelperText: "$3.99/mo billed yearly",
+    badge: "Best Value",
+    ctaVariant: "default" as const,
+    accentClassName: "border-primary/40 bg-primary/5",
+    featureIconClassName: "text-emerald-500",
+    features: [
+      "Unlimited notes creation & cloud storage",
+      "Unlimited tags per note",
+      "Premium serif font option (Lora)",
+      "Advanced focus mode features (Phase 2 Ready)",
+    ],
   },
   studio: {
     name: "Zen Studio",
-    monthlyLabel: "$11.99/mo",
-    monthlySubtext: "For brands and power users",
-    yearlyLabel: "$115.08/yr",
-    yearlySubtext: "$9.59/mo billed yearly",
+    subtitle: "For professional writers, agencies, and personal brands.",
+    monthlyAmount: "$11.99",
+    monthlyCadence: "/ month",
+    monthlyHelperText: "Whitelabel sharing and metadata controls",
+    yearlyAmount: "$115.08",
+    yearlyCadence: "/ year",
+    yearlyHelperText: "$9.59/mo billed yearly",
     badge: "Whitelabel",
+    ctaVariant: "studio" as const,
+    accentClassName: "border-purple-500/30",
+    featureIconClassName: "text-purple-500",
+    features: [
+      "Includes all Zen Pro features",
+      'Watermark Whitelabel (Hide "Powered by Minote")',
+      "Customizable shared page metadata layout settings",
+      "Priority Routing Support channels",
+    ],
   },
 } as const;
 
@@ -137,25 +138,33 @@ export function GuestWorkspace() {
       : MONTHLY_PRICE_IDS[plan];
   }
 
-  function renderMatrixValue(value: string) {
-    const isPositiveValue =
-      value === "Unlimited" ||
-      value.startsWith("Yes") ||
-      value.includes("Option") ||
-      value.includes("Removed") ||
-      value.includes("Included") ||
-      value === "Forever free";
+  function getPlanPrice(plan: "pro" | "studio") {
+    const meta = PLAN_META[plan];
+    if (billingCycle === "yearly") {
+      return {
+        amount: meta.yearlyAmount,
+        cadence: meta.yearlyCadence,
+        helperText: meta.yearlyHelperText,
+        buttonLabel:
+          plan === "pro" ? "Upgrade Pro Yearly" : "Upgrade Studio Yearly",
+      };
+    }
 
-    return (
-      <span className="inline-flex items-center gap-2">
-        {isPositiveValue ? (
-          <Check className="size-4 text-emerald-500" aria-hidden="true" />
-        ) : (
-          <Minus className="size-4 text-muted-foreground" aria-hidden="true" />
-        )}
-        <span>{value}</span>
-      </span>
-    );
+    return {
+      amount: meta.monthlyAmount,
+      cadence: meta.monthlyCadence,
+      helperText: meta.monthlyHelperText,
+      buttonLabel:
+        plan === "pro" ? "Upgrade Pro Monthly" : "Upgrade Studio Monthly",
+    };
+  }
+
+  function getPlanButtonClassName(plan: "free" | "pro" | "studio") {
+    if (plan === "studio") {
+      return "w-full bg-purple-600 text-white hover:bg-purple-700";
+    }
+
+    return "w-full";
   }
 
   return (
@@ -287,7 +296,7 @@ export function GuestWorkspace() {
         </div>
       </section>
 
-      {/* Pricing Matrix Section */}
+      {/* Pricing Cards Section */}
       <section id="pricing" className="w-full border-t border-border py-20">
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-10 space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-4">
@@ -295,7 +304,7 @@ export function GuestWorkspace() {
               Simple, transparent pricing.
             </h2>
             <p className="text-muted-foreground leading-relaxed">
-              Compare every plan side by side, then choose the billing cycle that fits your pace.
+              Pick the plan that matches your writing workflow, then switch billing cadence any time.
             </p>
           </div>
 
@@ -328,90 +337,38 @@ export function GuestWorkspace() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
-            <div className="grid min-w-[880px] grid-cols-[1.45fr_repeat(3,minmax(0,1fr))]">
-              <div className="border-b border-border bg-muted/30 px-6 py-5">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Feature comparison
+          <div className="grid gap-6 lg:grid-cols-3">
+            <div className="flex flex-col rounded-lg border border-border bg-card p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+              <div className="space-y-3">
+                <h3 className="text-2xl font-bold font-sans">{PLAN_META.free.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {PLAN_META.free.subtitle}
                 </p>
-              </div>
-
-              {(["free", "pro", "studio"] as const).map((planKey) => {
-                const plan = PLAN_META[planKey];
-                const priceLabel =
-                  billingCycle === "yearly" ? plan.yearlyLabel : plan.monthlyLabel;
-                const priceSubtext =
-                  billingCycle === "yearly"
-                    ? plan.yearlySubtext
-                    : plan.monthlySubtext;
-
-                return (
-                  <div
-                    className={[
-                      "border-b border-l border-border px-6 py-5",
-                      planKey === "pro" ? "bg-primary/5" : "bg-card",
-                    ].join(" ")}
-                    key={planKey}
-                  >
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-lg font-semibold">{plan.name}</h3>
-                        {plan.badge ? (
-                          <span
-                            className={[
-                              "rounded-full px-2 py-0.5 text-[11px] font-semibold",
-                              planKey === "pro"
-                                ? "bg-primary text-primary-foreground"
-                                : "bg-foreground text-background",
-                            ].join(" ")}
-                          >
-                            {plan.badge}
-                          </span>
-                        ) : null}
-                      </div>
-                      <div>
-                        <p className="text-2xl font-semibold tracking-tight">
-                          {priceLabel}
-                        </p>
-                        <p className="mt-1 text-sm text-muted-foreground">
-                          {priceSubtext}
-                        </p>
-                      </div>
-                    </div>
+                <div className="pt-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-extrabold font-sans">
+                      {PLAN_META.free.priceAmount}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {PLAN_META.free.priceCadence}
+                    </span>
                   </div>
-                );
-              })}
-
-              {PRICING_ROWS.map((row) => (
-                <div className="contents" key={row.feature}>
-                  <div className="border-b border-border px-6 py-4 text-sm font-medium">
-                    {row.feature}
-                  </div>
-                  <div className="border-b border-l border-border px-6 py-4 text-sm text-muted-foreground">
-                    {renderMatrixValue(row.free)}
-                  </div>
-                  <div className="border-b border-l border-border bg-primary/5 px-6 py-4 text-sm text-muted-foreground">
-                    {renderMatrixValue(row.pro)}
-                  </div>
-                  <div className="border-b border-l border-border px-6 py-4 text-sm text-muted-foreground">
-                    {renderMatrixValue(row.studio)}
-                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {PLAN_META.free.helperText}
+                  </p>
                 </div>
-              ))}
-
-              <div className="px-6 py-5 text-sm text-muted-foreground">
-                Choose your plan
               </div>
-              <div className="border-l border-border px-6 py-5">
+
+              <div className="mt-6">
                 <Dialog>
                   <DialogTrigger
                     render={
                       <Button
-                        className="w-full"
+                        className={getPlanButtonClassName("free")}
                         type="button"
-                        variant="outline"
+                        variant={PLAN_META.free.ctaVariant}
                       >
-                        Get Started
+                        {PLAN_META.free.ctaLabel}
                       </Button>
                     }
                   />
@@ -427,14 +384,50 @@ export function GuestWorkspace() {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="border-l border-border bg-primary/5 px-6 py-5">
+
+              <ul className="mt-6 space-y-3 border-t border-border pt-6 text-sm text-muted-foreground">
+                {PLAN_META.free.features.map((feature) => (
+                  <li className="flex items-start gap-3" key={feature}>
+                    <Check
+                      className={`mt-0.5 size-4 shrink-0 ${PLAN_META.free.featureIconClassName}`}
+                      aria-hidden="true"
+                    />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="relative flex flex-col rounded-lg border-2 border-primary/40 bg-card p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg dark:bg-[#121212]">
+              <div className="absolute right-6 top-0 -translate-y-1/2 rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground">
+                {PLAN_META.pro.badge}
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-2xl font-bold font-sans text-primary">{PLAN_META.pro.name}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {PLAN_META.pro.subtitle}
+                </p>
+                <div className="pt-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-extrabold font-sans">
+                      {getPlanPrice("pro").amount}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {getPlanPrice("pro").cadence}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {getPlanPrice("pro").helperText}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6">
                 <Dialog>
                   <DialogTrigger
                     render={
-                      <Button className="w-full" type="button">
-                        {billingCycle === "yearly"
-                          ? "Choose Pro Yearly"
-                          : "Choose Pro Monthly"}
+                      <Button className={getPlanButtonClassName("pro")} type="button">
+                        {getPlanPrice("pro").buttonLabel}
                       </Button>
                     }
                   />
@@ -453,14 +446,52 @@ export function GuestWorkspace() {
                   </DialogContent>
                 </Dialog>
               </div>
-              <div className="border-l border-border px-6 py-5">
+
+              <ul className="mt-6 space-y-3 border-t border-border pt-6 text-sm text-muted-foreground">
+                {PLAN_META.pro.features.map((feature) => (
+                  <li className="flex items-start gap-3" key={feature}>
+                    <Check
+                      className={`mt-0.5 size-4 shrink-0 ${PLAN_META.pro.featureIconClassName}`}
+                      aria-hidden="true"
+                    />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="relative flex flex-col rounded-lg border-2 border-purple-500/30 bg-card p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-lg dark:bg-[#121212]">
+              <div className="absolute right-6 top-0 -translate-y-1/2 rounded-full bg-purple-600 px-3 py-0.5 text-xs font-semibold text-white">
+                {PLAN_META.studio.badge}
+              </div>
+              <div className="space-y-3">
+                <h3 className="text-2xl font-bold font-sans text-purple-600 dark:text-purple-400">
+                  {PLAN_META.studio.name}
+                </h3>
+                <p className="text-sm text-muted-foreground">
+                  {PLAN_META.studio.subtitle}
+                </p>
+                <div className="pt-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-4xl font-extrabold font-sans">
+                      {getPlanPrice("studio").amount}
+                    </span>
+                    <span className="text-sm text-muted-foreground">
+                      {getPlanPrice("studio").cadence}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {getPlanPrice("studio").helperText}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6">
                 <Dialog>
                   <DialogTrigger
                     render={
-                      <Button className="w-full" type="button" variant="outline">
-                        {billingCycle === "yearly"
-                          ? "Choose Studio Yearly"
-                          : "Choose Studio Monthly"}
+                      <Button className={getPlanButtonClassName("studio")} type="button">
+                        {getPlanPrice("studio").buttonLabel}
                       </Button>
                     }
                   />
@@ -479,6 +510,18 @@ export function GuestWorkspace() {
                   </DialogContent>
                 </Dialog>
               </div>
+
+              <ul className="mt-6 space-y-3 border-t border-border pt-6 text-sm text-muted-foreground">
+                {PLAN_META.studio.features.map((feature) => (
+                  <li className="flex items-start gap-3" key={feature}>
+                    <Check
+                      className={`mt-0.5 size-4 shrink-0 ${PLAN_META.studio.featureIconClassName}`}
+                      aria-hidden="true"
+                    />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>

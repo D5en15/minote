@@ -117,7 +117,7 @@
 * ผู้ใช้ที่ยังไม่ลงชื่อเข้าใช้งานจะเห็นหน้า Landing Page สไตล์ Hero Section ตรงกลางที่ดูเรียบหรูและพรีเมียม
 * นำเสนอข้อมูลสำคัญ ได้แก่ ฟีเจอร์การใช้งาน (Features), แผนการให้บริการ (Pricing cards) และข้อมูลลิขสิทธิ์
 * แสดงปุ่มสลับการทำงาน Theme โหมดสว่าง/มืด (Light/Dark Theme Switcher) ในส่วน Header และปุ่ม Call to Action สำหรับเปิดใช้งาน Login Panel ผ่าน Popup modal
-* ส่วน Pricing บนหน้า public ต้องรองรับ comparison matrix 3 แผน (Zen Free, Zen Pro, Zen Studio) พร้อม toggle สลับ Monthly / Yearly และ CTA ของแต่ละแผน
+* ส่วน Pricing บนหน้า public ต้องรองรับ 3-column pricing cards สำหรับ Zen Free, Zen Pro และ Zen Studio พร้อม toggle สลับ Monthly / Yearly และ CTA ของแต่ละแผน
 
 #### Business Logic & Edge Cases
 
